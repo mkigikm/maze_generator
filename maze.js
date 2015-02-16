@@ -1,49 +1,48 @@
-function Maze (rows, cols) {
+function Maze (rows, cols, row, col) {
+  this.UP    = 1;
+  this.RIGHT = 2;
+  this.DOWN  = 4;
+  this.LEFT  = 8;
+  this.UNVISITED = 0xf;
+
+  this.opposite = [];
+  this.opposite[this.UP]    = this.DOWN;
+  this.opposite[this.DOWN]  = this.UP;
+  this.opposite[this.LEFT]  = this.RIGHT;
+  this.opposite[this.RIGHT] = this.LEFT;
+
+  this.row_offset = [];
+  this.row_offset[this.UP]    = -1;
+  this.row_offset[this.DOWN]  =  1;
+  this.row_offset[this.LEFT]  =  0;
+  this.row_offset[this.RIGHT] =  0;
+
+  this.col_offset = [];
+  this.col_offset[this.UP]    =  0;
+  this.col_offset[this.DOWN]  =  0;
+  this.col_offset[this.LEFT]  = -1;
+  this.col_offset[this.RIGHT] =  1;
+
   this.grid = new Array(rows);
   this.rows = rows;
   this.cols = cols;
 
-  this.UP = 1;
-  this.RIGHT = 2;
-  this.DOWN = 4;
-  this.LEFT = 8;
-  this.UNVISITED = 0xf;
-
-  this.opposite = {
-    this.UP: this.DOWN,
-    this.DOWN: this.UP,
-    this.LEFT: this.RIGHT,
-    this.RIGHT: this.LEFT
-  }
-
-  this.row_offset = {
-    this.UP:   -1,
-    this.DOWN:  1,
-    this.LEFT:  0,
-    this.RIGHT: 0
-  }
-
-  this.col_offset = {
-    this.UP:    0,
-    this.DOWN:  0,
-    this.LEFT: -1,
-    this.RIGHT: 1
-  }
-
-  for (var i; i < rows; i++) {
+  for (var i = 0; i < rows; i++) {
     this.grid[i] = new Array(cols);
 
-    for (var j; j < cols; j++)
+    for (var j = 0; j < cols; j++)
       this.grid[i][j] = this.UNVISITED;
   }
+
+  this.init_maze_building(row, col);
 }
 
 Maze.prototype.out_of_rows = function(row) {
-  row < 0 || row >= this.rows;
+  return row === -1 || row === this.rows;
 };
 
 Maze.prototype.out_of_cols = function(col) {
-  col < 0 || col >= this.cols;
+  return col === -1 || col === this.cols;
 };
 
 function shuffleArray(array) {
@@ -101,7 +100,6 @@ Maze.prototype.try_to_crush = function () {
       continue;
 
     this.crush_wall(row, col, dir);
-    this.mark_visited(nrow, ncol);
     var to_del = this.unvisited.indexOf(nrow + "," + ncol);
     this.unvisited.splice(to_del, 1);
     this.stack.push([row, col]);
@@ -112,17 +110,17 @@ Maze.prototype.try_to_crush = function () {
   return null;
 };
 
-Maze.prototype.visit = function() {
+Maze.prototype.visit = function () {
   var new_cur = this.try_to_crush();
   if (new_cur != null)
     return new_cur;
 
   if (this.stack.length > 0) {
     this.cur = this.stack.pop();
-    return this.cur
+    return this.cur;
   }
 
-  if (this.unvisited.length > 0)
+  if (this.unvisited.length > 0) {
     this.cur = this.unvisited.pop().split(",").map(
       function (i) {
         return Number(i);

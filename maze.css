@@ -1,0 +1,93 @@
+#maze_area {
+  height: 419px;
+  width:  1219px;
+}
+
+.current {
+  background: red;
+}
+
+.urdl,
+.urd, .url, .udl, .rdl,
+.ur, .ud, .ul, .rd, .rl, .dl,
+.u, .r, .d, .l,
+.nowalls {
+  width: 18px;
+  height: 18px;
+  float: left;
+  border: 1px solid white;
+}
+
+.urdl {
+  border: 1px solid black;
+}
+
+.urd {
+  border-top:    1px solid black;
+  border-right:  1px solid black;
+  border-bottom: 1px solid black;
+}
+
+.url {
+  border-top:    1px solid black;
+  border-left:   1px solid black;
+  border-right: 1px solid black;
+}
+
+.udl {
+  border-top:    1px solid black;
+  border-left:   1px solid black;
+  border-bottom: 1px solid black;
+}
+
+.rdl {
+  border-right:  1px solid black;
+  border-left:   1px solid black;
+  border-bottom: 1px solid black;
+}
+
+.ur {
+  border-top:    1px solid black;
+  border-right:  1px solid black;
+}
+
+.ud {
+  border-top:    1px solid black;
+  border-bottom: 1px solid black;
+}
+
+.ul {
+  border-top:    1px solid black;
+  border-left:   1px solid black;
+}
+
+.rd {
+  border-right:  1px solid black;
+  border-bottom: 1px solid black;
+}
+
+.rl {
+  border-right:  1px solid black;
+  border-left:   1px solid black;
+}
+
+.dl {
+  border-left:   1px solid black;
+  border-bottom: 1px solid black;
+}
+
+.u {
+  border-top:    1px solid black;
+}
+
+.r {
+  border-right:  1px solid black;
+}
+
+.d {
+  border-bottom: 1px solid black;
+}
+
+.l {
+  border-left:   1px solid black;
+}
