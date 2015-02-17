@@ -33,7 +33,7 @@ SamplingSet.prototype.my_remove = function(i, value) {
 SamplingSet.prototype.sample = function () {
   if (this.length() === 0)
     return null;
-    
+
   var i = ~~(Math.random() * this.length());
 
   var value = this.index_hash[i];

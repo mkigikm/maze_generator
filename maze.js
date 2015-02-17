@@ -98,6 +98,7 @@ Maze.prototype.try_to_crush = function () {
 };
 
 Maze.prototype.visit = function () {
+  //try to forge a new path
   var new_cur = this.try_to_crush();
   if (new_cur != null) {
     var changed = [this.cur, new_cur];
@@ -106,14 +107,20 @@ Maze.prototype.visit = function () {
     return changed;
   }
 
+  console.log(this.unvisited.hash_index);
+  console.log(this.unvisited.index_hash);
+
+  //backtrack
   if (this.stack.length > 0) {
     var old_cur = this.cur;
     this.cur = this.stack.pop();
     return [this.cur, old_cur];
   }
 
-  // console.log("sample");
+  console.log("sample");
 
+  //sample from unexplored area, need to make this connect at some point
+  //well, I have to get unvisited working right first :)
   if (this.unvisited.length() > 0) {
     console.log(this.unvisited.length());
     console.log(this.unvisited.index_hash);
