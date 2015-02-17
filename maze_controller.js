@@ -1,5 +1,5 @@
 function setup () {
-  var maze = new Maze(5, 5, 0, 0);
+  var maze = new Maze(40, 80, 0, 0);
   c = new MazeController(document.getElementById("maze_area"), maze);
 }
 
@@ -11,15 +11,14 @@ function MazeController (parent, maze) {
 
 MazeController.prototype.step = function () {
   var changed = this.maze.visit();
-  if (changed === null)
-    return null;
 
-  this.view.update_cell(this.maze, changed[0]);
-  this.view.update_cell(this.maze, changed[1]);
-
-  this.view.update_cur(this.maze.cur);
-
-  return changed !== null;
+  if (changed !== null) {
+    this.view.update_cell(this.maze, changed[0]);
+    this.view.update_cell(this.maze, changed[1]);
+    if (!this.maze.finished_building()) {
+      this.view.update_cur(this.maze.cur);
+    }
+  }
 };
 
 MazeController.prototype.go = function () {
@@ -27,9 +26,12 @@ MazeController.prototype.go = function () {
     this.step();
     var me = this;
     this.timer = setInterval(function () {
-        if (!me.step())
-          clearInterval(this.timer);
-      }, 100);
+        me.step();
+
+        if (me.maze.finished_building()) {
+          clearInterval(me.timer);
+        }
+      }, 1);
   }
 }
 

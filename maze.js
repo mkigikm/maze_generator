@@ -5,6 +5,84 @@ function Maze (rows, cols, row, col) {
   this.LEFT  = 8;
   this.UNVISITED = 0xf;
 
+  this.sample_dirs = [
+    [this.UP, this.DOWN, this.LEFT, this.RIGHT],
+    [this.UP, this.DOWN, this.RIGHT, this.LEFT],
+    [this.UP, this.LEFT, this.DOWN, this.RIGHT],
+    [this.UP, this.LEFT, this.RIGHT, this.DOWN],
+    [this.UP, this.RIGHT, this.DOWN, this.LEFT],
+    [this.UP, this.RIGHT, this.LEFT, this.DOWN],
+
+
+    [this.UP, this.DOWN, this.LEFT, this.RIGHT],
+    [this.UP, this.DOWN, this.RIGHT, this.LEFT],
+    [this.UP, this.LEFT, this.DOWN, this.RIGHT],
+    [this.UP, this.LEFT, this.RIGHT, this.DOWN],
+    [this.UP, this.RIGHT, this.DOWN, this.LEFT],
+    [this.UP, this.RIGHT, this.LEFT, this.DOWN],
+
+
+    [this.UP, this.DOWN, this.LEFT, this.RIGHT],
+    [this.UP, this.DOWN, this.RIGHT, this.LEFT],
+    [this.UP, this.LEFT, this.DOWN, this.RIGHT],
+    [this.UP, this.LEFT, this.RIGHT, this.DOWN],
+    [this.UP, this.RIGHT, this.DOWN, this.LEFT],
+    [this.UP, this.RIGHT, this.LEFT, this.DOWN],
+
+
+    [this.UP, this.DOWN, this.LEFT, this.RIGHT],
+    [this.UP, this.DOWN, this.RIGHT, this.LEFT],
+    [this.UP, this.LEFT, this.DOWN, this.RIGHT],
+    [this.UP, this.LEFT, this.RIGHT, this.DOWN],
+    [this.UP, this.RIGHT, this.DOWN, this.LEFT],
+    [this.UP, this.RIGHT, this.LEFT, this.DOWN],
+
+    [this.DOWN, this.UP, this.LEFT, this.RIGHT],
+    [this.DOWN, this.UP, this.RIGHT, this.LEFT],
+    [this.DOWN, this.LEFT, this.UP, this.RIGHT],
+    [this.DOWN, this.LEFT, this.RIGHT, this.UP],
+    [this.DOWN, this.RIGHT, this.UP, this.LEFT],
+    [this.DOWN, this.RIGHT, this.LEFT, this.UP],
+
+    [this.LEFT, this.DOWN, this.UP, this.RIGHT],
+    [this.LEFT, this.DOWN, this.RIGHT, this.UP],
+    [this.LEFT, this.UP, this.DOWN, this.RIGHT],
+    [this.LEFT, this.UP, this.RIGHT, this.DOWN],
+    [this.LEFT, this.RIGHT, this.DOWN, this.UP],
+    [this.LEFT, this.RIGHT, this.UP, this.DOWN],
+
+
+    [this.RIGHT, this.DOWN, this.LEFT, this.UP],
+    [this.RIGHT, this.DOWN, this.UP, this.LEFT],
+    [this.RIGHT, this.LEFT, this.DOWN, this.UP],
+    [this.RIGHT, this.LEFT, this.UP, this.DOWN],
+    [this.RIGHT, this.UP, this.DOWN, this.LEFT],
+    [this.RIGHT, this.UP, this.LEFT, this.DOWN],
+
+
+    [this.RIGHT, this.DOWN, this.LEFT, this.UP],
+    [this.RIGHT, this.DOWN, this.UP, this.LEFT],
+    [this.RIGHT, this.LEFT, this.DOWN, this.UP],
+    [this.RIGHT, this.LEFT, this.UP, this.DOWN],
+    [this.RIGHT, this.UP, this.DOWN, this.LEFT],
+    [this.RIGHT, this.UP, this.LEFT, this.DOWN],
+
+    [this.RIGHT, this.DOWN, this.LEFT, this.UP],
+    [this.RIGHT, this.DOWN, this.UP, this.LEFT],
+    [this.RIGHT, this.LEFT, this.DOWN, this.UP],
+    [this.RIGHT, this.LEFT, this.UP, this.DOWN],
+    [this.RIGHT, this.UP, this.DOWN, this.LEFT],
+    [this.RIGHT, this.UP, this.LEFT, this.DOWN],
+
+
+    [this.RIGHT, this.DOWN, this.LEFT, this.UP],
+    [this.RIGHT, this.DOWN, this.UP, this.LEFT],
+    [this.RIGHT, this.LEFT, this.DOWN, this.UP],
+    [this.RIGHT, this.LEFT, this.UP, this.DOWN],
+    [this.RIGHT, this.UP, this.DOWN, this.LEFT],
+    [this.RIGHT, this.UP, this.LEFT, this.DOWN]
+  ];
+
   this.opposite = [];
   this.opposite[this.UP]    = this.DOWN;
   this.opposite[this.DOWN]  = this.UP;
@@ -77,6 +155,8 @@ Maze.prototype.try_to_crush = function () {
   var row = this.cur[0];
   var col = this.cur[1];
 
+  // dirs = this.sample_dirs[~~(this.sample_dirs.length * Math.random())];
+
   for (var dir of dirs) {
     var nrow = row + this.row_offset[dir];
     var ncol = col + this.col_offset[dir];
@@ -103,7 +183,7 @@ Maze.prototype.cell_to_string = function (cell) {
 };
 
 Maze.prototype.string_to_cell = function (cell) {
-  cell.split(",").map(
+  return cell.split(",").map(
     function (i) {
       return Number(i);
     }
@@ -134,9 +214,14 @@ Maze.prototype.visit = function () {
   //well, I have to get unvisited working right first :)
   if (this.unvisited.size() > 0) {
     var old_cur = this.cur;
-    this.cur = this.string_to_cell(this.unvisited.sample());
+    var new_cur = this.unvisited.sample();
+    this.cur = this.string_to_cell(new_cur);
     return [this.cur, old_cur];
   }
 
   return null;
+};
+
+Maze.prototype.finished_building = function () {
+  return this.unvisited.size() === 0;
 };
