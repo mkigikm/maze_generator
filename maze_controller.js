@@ -18,13 +18,18 @@ MazeController.prototype.step = function () {
   this.view.update_cell(this.maze, changed[1]);
 
   this.view.update_cur(this.maze.cur);
+
+  return changed !== null;
 };
 
 MazeController.prototype.go = function () {
   if (this.timer === null) {
     this.step();
     var me = this;
-    this.timer = setInterval(function () { me.step() }, 100);
+    this.timer = setInterval(function () {
+        if (!me.step())
+          clearInterval(this.timer);
+      }, 100);
   }
 }
 

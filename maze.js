@@ -103,7 +103,7 @@ Maze.prototype.cell_to_string = function (cell) {
 };
 
 Maze.prototype.string_to_cell = function (cell) {
-  cellsplit(",").map(
+  cell.split(",").map(
     function (i) {
       return Number(i);
     }
