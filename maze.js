@@ -45,16 +45,6 @@ Maze.prototype.out_of_cols = function(col) {
   return col === -1 || col === this.cols;
 };
 
-function shuffleArray(array) {
-    for (var i = array.length - 1; i > 0; i--) {
-        var j = Math.floor(Math.random() * (i + 1));
-        var temp = array[i];
-        array[i] = array[j];
-        array[j] = temp;
-    }
-    return array;
-}
-
 Maze.prototype.crush_wall = function (row, col, dir) {
   var nrow = row + this.row_offset[dir];
   var ncol = col + this.col_offset[dir];
@@ -69,22 +59,20 @@ Maze.prototype.crush_wall = function (row, col, dir) {
 Maze.prototype.init_maze_building = function (row, col) {
   this.cur = [row, col];
   this.stack = [];
-
-  this.unvisited = [];
+  this.unvisited = new SamplingSet();
 
   for (var i = 0; i < this.rows; i++) {
-    for (var j = 0; j < this.col; j++) {
+    for (var j = 0; j < this.cols; j++) {
       if (i === row && j === col)
         continue;
 
       this.unvisited.push(i + "," + j);
     }
   }
-  shuffleArray(this.unvisited);
 };
 
 Maze.prototype.try_to_crush = function () {
-  var dirs = shuffleArray([this.UP, this.DOWN, this.LEFT, this.RIGHT]);
+  var dirs = shuffle([this.UP, this.DOWN, this.LEFT, this.RIGHT]);
   var row = this.cur[0];
   var col = this.cur[1];
 
@@ -100,11 +88,10 @@ Maze.prototype.try_to_crush = function () {
       continue;
 
     this.crush_wall(row, col, dir);
-    var to_del = this.unvisited.indexOf(nrow + "," + ncol);
-    this.unvisited.splice(to_del, 1);
+    this.unvisited.remove(nrow + "," + ncol);
     this.stack.push([row, col]);
-    this.cur = [nrow, ncol];
-    return this.cur;
+
+    return [nrow, ncol];
   }
 
   return null;
@@ -112,21 +99,31 @@ Maze.prototype.try_to_crush = function () {
 
 Maze.prototype.visit = function () {
   var new_cur = this.try_to_crush();
-  if (new_cur != null)
-    return new_cur;
+  if (new_cur != null) {
+    var changed = [this.cur, new_cur];
+    this.cur = new_cur;
 
-  if (this.stack.length > 0) {
-    this.cur = this.stack.pop();
-    return this.cur;
+    return changed;
   }
 
-  if (this.unvisited.length > 0) {
-    this.cur = this.unvisited.pop().split(",").map(
+  if (this.stack.length > 0) {
+    var old_cur = this.cur;
+    this.cur = this.stack.pop();
+    return [this.cur, old_cur];
+  }
+
+  // console.log("sample");
+
+  if (this.unvisited.length() > 0) {
+    console.log(this.unvisited.length());
+    console.log(this.unvisited.index_hash);
+    var old_cur = this.cur;
+    this.cur = this.unvisited.sample().split(",").map(
       function (i) {
         return Number(i);
       }
     );
-    return this.cur;
+    return [this.cur, old_cur];
   }
 
   return null;

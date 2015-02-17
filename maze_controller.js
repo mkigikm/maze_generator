@@ -1,5 +1,5 @@
 function setup () {
-  var maze = new Maze(20, 60, 0, 0);
+  var maze = new Maze(5, 5, 0, 0);
   c = new MazeController(document.getElementById("maze_area"), maze);
 }
 
@@ -10,8 +10,14 @@ function MazeController (parent, maze) {
 }
 
 MazeController.prototype.step = function () {
-  this.maze.visit();
-  this.view.update(this.maze);
+  var changed = this.maze.visit();
+  if (changed === null)
+    return null;
+
+  this.view.update_cell(this.maze, changed[0]);
+  this.view.update_cell(this.maze, changed[1]);
+
+  this.view.update_cur(this.maze.cur);
 };
 
 MazeController.prototype.go = function () {
@@ -29,9 +35,20 @@ function MazeView (parent, rows, cols) {
     this.cells[i] = new Array(cols);
 
     for (var j = 0; j < cols; j++)
-      this.cells[i][j] = new CellView(parent);
+      this.cells[i][j] = new CellView(parent, i +"," + j);
   }
 }
+
+MazeView.prototype.update_cell = function (maze, cell) {
+  var i = cell[0];
+  var j = cell[1];
+
+  this.cells[i][j].update(maze.grid[i][j]);
+};
+
+MazeView.prototype.update_cur = function (cur) {
+  this.cells[cur[0]][cur[1]].div.className += " current";
+};
 
 MazeView.prototype.update = function (maze) {
   for (var i = 0; i < maze.rows; i++) {
@@ -39,11 +56,12 @@ MazeView.prototype.update = function (maze) {
       this.cells[i][j].update(maze.grid[i][j]);
   }
 
-  this.cells[maze.cur[0]][maze.cur[1]].div.className += " current";
+  this.update_cur(maze.cur);
 };
 
-function CellView (parent) {
+function CellView (parent, id) {
   this.div = document.createElement("div");
+  this.div.id = id;
   this.div.className = "urdl";
   parent.appendChild(this.div);
 }
@@ -63,6 +81,9 @@ CellView.prototype.update = function (value) {
     className += "d";
   if ((LEFT & value) === LEFT)
     className += "l";
+
+  if (className === "")
+    className = "nowalls";
 
   this.div.className = className;
 };

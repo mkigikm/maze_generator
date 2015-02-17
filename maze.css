@@ -1,6 +1,6 @@
 #maze_area {
-  height: 419px;
-  width:  1219px;
+  height: 100px;
+  width:  100px;
 }
 
 .current {
@@ -15,32 +15,39 @@
   width: 18px;
   height: 18px;
   float: left;
-  border: 1px solid white;
+  border: 1px solid #fefefe;
 }
 
 .urdl {
-  border: 1px solid black;
+  border-top:    1px solid black;
+  border-right:  1px solid black;
+  border-bottom: 1px solid black;
+  border-left:   1px solid black;
 }
 
 .urd {
   border-top:    1px solid black;
   border-right:  1px solid black;
   border-bottom: 1px solid black;
+  border-left:   1px solid white;
 }
 
 .url {
   border-top:    1px solid black;
   border-left:   1px solid black;
-  border-right: 1px solid black;
+  border-bottom: 1px solid white;
+  border-right:  1px solid black;
 }
 
 .udl {
   border-top:    1px solid black;
+  border-right:  1px solid white;
   border-left:   1px solid black;
   border-bottom: 1px solid black;
 }
 
 .rdl {
+  border-top:    1px solid white;
   border-right:  1px solid black;
   border-left:   1px solid black;
   border-bottom: 1px solid black;
@@ -49,45 +56,69 @@
 .ur {
   border-top:    1px solid black;
   border-right:  1px solid black;
+  border-bottom: 1px solid white;
+  border-left:   1px solid white;
 }
 
 .ud {
   border-top:    1px solid black;
+  border-right:  1px solid white;
   border-bottom: 1px solid black;
+  border-left:   1px solid white;
 }
 
 .ul {
   border-top:    1px solid black;
+  border-right:  1px solid white;
+  border-bottom: 1px solid white;
   border-left:   1px solid black;
 }
 
 .rd {
+  border-top:    1px solid white;
   border-right:  1px solid black;
   border-bottom: 1px solid black;
+  border-left:   1px solid white;
 }
 
 .rl {
+  border-top:    1px solid white;
   border-right:  1px solid black;
+  border-bottom: 1px solid white;
   border-left:   1px solid black;
 }
 
 .dl {
+  border-top:    1px solid white;
+  border-right:  1px solid white;
   border-left:   1px solid black;
   border-bottom: 1px solid black;
 }
 
 .u {
   border-top:    1px solid black;
+  border-right:  1px solid white;
+  border-bottom: 1px solid white;
+  border-left:   1px solid white;
 }
 
 .r {
+  border-top:    1px solid white;
   border-right:  1px solid black;
+  border-bottom: 1px solid white;
+  border-left:   1px solid white;
 }
 
 .d {
+  border-top:    1px solid white;
+  border-right:  1px solid white;
   border-bottom: 1px solid black;
+  border-left:   1px solid white;
 }
 
 .l {
+  border-top:    1px solid white;
+  border-right:  1px solid white;
+  border-bottom: 1px solid white;
   border-left:   1px solid black;
 }
