@@ -66,9 +66,10 @@ Maze.prototype.init_maze_building = function (row, col) {
       if (i === row && j === col)
         continue;
 
-      this.unvisited.push(i + "," + j);
+      this.unvisited.add(this.cell_to_string([i, j]));
     }
   }
+  console.log(this.unvisited.set);
 };
 
 Maze.prototype.try_to_crush = function () {
@@ -88,13 +89,25 @@ Maze.prototype.try_to_crush = function () {
       continue;
 
     this.crush_wall(row, col, dir);
-    this.unvisited.remove(nrow + "," + ncol);
+    this.unvisited.delete(this.cell_to_string([nrow, ncol]));
     this.stack.push([row, col]);
 
     return [nrow, ncol];
   }
 
   return null;
+};
+
+Maze.prototype.cell_to_string = function (cell) {
+  return cell[0] + "," + cell[1];
+};
+
+Maze.prototype.string_to_cell = function (cell) {
+  cellsplit(",").map(
+    function (i) {
+      return Number(i);
+    }
+  );
 };
 
 Maze.prototype.visit = function () {
@@ -107,9 +120,6 @@ Maze.prototype.visit = function () {
     return changed;
   }
 
-  console.log(this.unvisited.hash_index);
-  console.log(this.unvisited.index_hash);
-
   //backtrack
   if (this.stack.length > 0) {
     var old_cur = this.cur;
@@ -118,18 +128,13 @@ Maze.prototype.visit = function () {
   }
 
   console.log("sample");
+  console.log(this.unvisited.size());
 
   //sample from unexplored area, need to make this connect at some point
   //well, I have to get unvisited working right first :)
-  if (this.unvisited.length() > 0) {
-    console.log(this.unvisited.length());
-    console.log(this.unvisited.index_hash);
+  if (this.unvisited.size() > 0) {
     var old_cur = this.cur;
-    this.cur = this.unvisited.sample().split(",").map(
-      function (i) {
-        return Number(i);
-      }
-    );
+    this.cur = this.string_to_cell(this.unvisited.sample());
     return [this.cur, old_cur];
   }
 

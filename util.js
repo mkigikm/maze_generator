@@ -11,37 +11,33 @@ function shuffle(array) {
 }
 
 function SamplingSet () {
-  this.hash_index = [];
-  this.index_hash = [];
+  this.set = new Set();
 }
 
-SamplingSet.prototype.push = function (value) {
-  this.index_hash.push(value);
-  this.hash_index[value] = this.index_hash.length - 1;
+SamplingSet.prototype.add = function (value) {
+  this.set.add(value);
 };
 
-SamplingSet.prototype.remove = function (value) {
-  var i = this.hash_index[value];
-  this.my_remove(i, value);
+SamplingSet.prototype.delete = function (value) {
+  this.set.delete(value);
 };
-
-SamplingSet.prototype.my_remove = function(i, value) {
-  this.hash_index[value] = null;
-  this.index_hash.splice(i, 1);
-}
 
 SamplingSet.prototype.sample = function () {
-  if (this.length() === 0)
+  if (this.size() === 0)
     return null;
 
-  var i = ~~(Math.random() * this.length());
+  var i = ~~(Math.random() * this.size());
 
-  var value = this.index_hash[i];
-  this.my_remove(i, value);
+  for (var item of this.set) {
+    if (i == 0) {
+      this.delete(item);
+      return item;
+    }
 
-  return value;
+    i--;
+  }
 };
 
-SamplingSet.prototype.length = function () {
-  return this.index_hash.length;
+SamplingSet.prototype.size = function () {
+  return this.set.size;
 };
