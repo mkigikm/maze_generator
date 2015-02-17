@@ -31,9 +31,12 @@ SamplingSet.prototype.my_remove = function(i, value) {
 }
 
 SamplingSet.prototype.sample = function () {
-  var i = ~~(Math.random() * this.index_hash.length);
+  if (this.length() === 0)
+    return null;
+    
+  var i = ~~(Math.random() * this.length());
 
-  var value = this.index_hash[value];
+  var value = this.index_hash[i];
   this.my_remove(i, value);
 
   return value;
@@ -41,4 +44,4 @@ SamplingSet.prototype.sample = function () {
 
 SamplingSet.prototype.length = function () {
   return this.index_hash.length;
-}
+};
