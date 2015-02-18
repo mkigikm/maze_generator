@@ -1,5 +1,5 @@
 function setup () {
-  var maze = new Maze(40, 50, 0, 0);
+  var maze = new Maze(200, 200, 0, 0);
   c = new MazeController(document.getElementById("maze_area"), maze);
 }
 
