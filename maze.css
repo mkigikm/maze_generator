@@ -1,6 +1,7 @@
 #maze_area {
-  height:  800px;
-  width:  1600px;
+  height: 500px;
+  width:  500px;
+  border: 1px solid black;
 }
 
 .current {

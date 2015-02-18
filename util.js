@@ -4,40 +4,8 @@ function shuffle(array) {
 
     var temp = array[j];
     array[j] = array[i];
-    array[i] = array[j];
+    array[i] = temp;
   }
 
   return array;
 }
-
-function SamplingSet () {
-  this.set = new Set();
-}
-
-SamplingSet.prototype.add = function (value) {
-  this.set.add(value);
-};
-
-SamplingSet.prototype.delete = function (value) {
-  this.set.delete(value);
-};
-
-SamplingSet.prototype.sample = function () {
-  if (this.size() === 0)
-    return null;
-
-  var i = ~~(Math.random() * this.size());
-
-  for (var item of this.set) {
-    if (i == 0) {
-      this.delete(item);
-      return item;
-    }
-
-    i--;
-  }
-};
-
-SamplingSet.prototype.size = function () {
-  return this.set.size;
-};

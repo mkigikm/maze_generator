@@ -1,5 +1,5 @@
 function setup () {
-  var maze = new Maze(40, 80, 0, 0);
+  var maze = new Maze(25, 25, 0, 0);
   c = new MazeController(document.getElementById("maze_area"), maze);
 }
 
@@ -13,10 +13,11 @@ MazeController.prototype.step = function () {
   var changed = this.maze.visit();
 
   if (changed !== null) {
-    this.view.update_cell(this.maze, changed[0]);
-    this.view.update_cell(this.maze, changed[1]);
-    if (!this.maze.finished_building()) {
-      this.view.update_cur(this.maze.cur);
+    this.view.updateCell(this.maze, changed[0]);
+    this.view.updateCell(this.maze, changed[1]);
+
+    if (!this.maze.finishedBuilding()) {
+      this.view.updateCur(this.maze.cur);
     }
   }
 };
@@ -28,7 +29,7 @@ MazeController.prototype.go = function () {
     this.timer = setInterval(function () {
         me.step();
 
-        if (me.maze.finished_building()) {
+        if (me.maze.finishedBuilding()) {
           clearInterval(me.timer);
         }
       }, 1);
@@ -41,29 +42,31 @@ function MazeView (parent, rows, cols) {
   for (var i = 0; i < rows; i++) {
     this.cells[i] = new Array(cols);
 
-    for (var j = 0; j < cols; j++)
+    for (var j = 0; j < cols; j++) {
       this.cells[i][j] = new CellView(parent, i +"," + j);
+    }
   }
 }
 
-MazeView.prototype.update_cell = function (maze, cell) {
+MazeView.prototype.updateCell = function (maze, cell) {
   var i = cell[0];
   var j = cell[1];
 
-  this.cells[i][j].update(maze.grid[i][j]);
+  this.cells[i][j].update(maze.walls(i, j));
 };
 
-MazeView.prototype.update_cur = function (cur) {
+MazeView.prototype.updateCur = function (cur) {
   this.cells[cur[0]][cur[1]].div.className += " current";
 };
 
 MazeView.prototype.update = function (maze) {
   for (var i = 0; i < maze.rows; i++) {
-    for (var j = 0; j < maze.cols; j++)
-      this.cells[i][j].update(maze.grid[i][j]);
+    for (var j = 0; j < maze.cols; j++) {
+      this.cells[i][j].update(maze.walls(i, j));
+    }
   }
 
-  this.update_cur(maze.cur);
+  this.updateCur(maze.cur);
 };
 
 function CellView (parent, id) {
@@ -73,20 +76,20 @@ function CellView (parent, id) {
   parent.appendChild(this.div);
 }
 
-CellView.prototype.update = function (value) {
-  var UP    = 1;
+CellView.prototype.update = function (walls) {
+  var DOWN  = 1;
   var RIGHT = 2;
-  var DOWN  = 4;
+  var UP    = 4;
   var LEFT  = 8;
 
   var className = "";
-  if ((UP & value) === UP)
+  if ((UP & walls) === UP)
     className += "u";
-  if ((RIGHT & value) === RIGHT)
+  if ((RIGHT & walls) === RIGHT)
     className += "r";
-  if ((DOWN & value) === DOWN)
+  if ((DOWN & walls) === DOWN)
     className += "d";
-  if ((LEFT & value) === LEFT)
+  if ((LEFT & walls) === LEFT)
     className += "l";
 
   if (className === "")
