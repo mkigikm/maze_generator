@@ -1,5 +1,5 @@
 function setup () {
-  var maze = new Maze(200, 200, 0, 0);
+  var maze = new Maze(200, 500, 0, 0);
   c = new MazeController(document.getElementById("maze_area"), maze);
 }
 
@@ -51,8 +51,7 @@ function MazeView (parent, rows, cols) {
 MazeView.prototype.updateCell = function (maze, cell) {
   var i = cell[0];
   var j = cell[1];
-
-  this.cells[i][j].update(maze.walls(i, j));
+  this.cells[i][j].update(maze, i, j);
 };
 
 MazeView.prototype.updateCur = function (cur) {
@@ -62,7 +61,7 @@ MazeView.prototype.updateCur = function (cur) {
 MazeView.prototype.update = function (maze) {
   for (var i = 0; i < maze.rows; i++) {
     for (var j = 0; j < maze.cols; j++) {
-      this.cells[i][j].update(maze.walls(i, j));
+      this.cells[i][j].update(maze, i, j);
     }
   }
 
@@ -76,21 +75,13 @@ function CellView (parent, id) {
   parent.appendChild(this.div);
 }
 
-CellView.prototype.update = function (walls) {
-  var DOWN  = 1;
-  var RIGHT = 2;
-  var UP    = 4;
-  var LEFT  = 8;
-
+CellView.prototype.update = function (maze, row, col) {
   var className = "";
-  if ((UP & walls) === UP)
-    className += "u";
-  if ((RIGHT & walls) === RIGHT)
-    className += "r";
-  if ((DOWN & walls) === DOWN)
-    className += "d";
-  if ((LEFT & walls) === LEFT)
-    className += "l";
+
+  if (maze.upWall   (row, col)) className += "u";
+  if (maze.rightWall(row, col)) className += "r";
+  if (maze.downWall (row, col)) className += "d";
+  if (maze.leftWall (row, col)) className += "l";
 
   if (className === "")
     className = "nowalls";
