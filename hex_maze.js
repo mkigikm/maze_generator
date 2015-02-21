@@ -72,7 +72,7 @@ HexMaze.prototype.ulWall = function (row, col) {
 HexMaze.prototype.uWall = function (row, col) {
   var nrow = this.rowAdd(row, col, HexMaze.U),
       ncol = this.colAdd(row, col, HexMaze.U);
-
+      
   if (this.outOfBounds(nrow, ncol)) {
     return HexMaze.U;
   }
@@ -84,7 +84,7 @@ HexMaze.prototype.urWall = function (row, col) {
       ncol = this.colAdd(row, col, HexMaze.UR);
 
   if (this.outOfBounds(nrow, ncol)) {
-    return HexMaze.U;
+    return HexMaze.UR;
   }
   return this.dlWall(nrow, ncol, HexMaze.DL) << 3;
 };
