@@ -19,6 +19,14 @@ MazeController.prototype.setup = function () {
 
   this.stop();
 
+  if (row > rows) {
+    row = 0;
+  }
+
+  if (col > cols) {
+    col = 0;
+  }
+
   if ($('#square_maze').is(':checked')) {
     this.maze = new SquareMaze(rows, cols, [row, col]);
     this.view = new SquareMazeCanvasView(rows, cols, sideLength, wallThickness,

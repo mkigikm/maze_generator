@@ -5,11 +5,11 @@ function HexMazeCanvasView (rows, cols, sideLength, wallThickness, canvas) {
 HexMazeCanvasView.prototype = Object.create(MazeCanvasView.prototype);
 
 HexMazeCanvasView.prototype.canvasHeight = function () {
-  return 1000;
+  return (this.rows + 1) * this.hexHeight();
 };
 
 HexMazeCanvasView.prototype.canvasWidth = function () {
-  return 1000;
+  return 2 * (this.cols - 1) * (this.sideLength * 8 / 5) + 19 * this.sideLength / 5;
 };
 
 HexMazeCanvasView.prototype.refreshInterior = function (maze) {
