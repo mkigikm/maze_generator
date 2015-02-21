@@ -5,23 +5,19 @@ function SquareMazeCanvasView (rows, cols, padding, wallWidth, canvas) {
 SquareMazeCanvasView.prototype = Object.create(MazeCanvasView.prototype);
 
 SquareMazeCanvasView.prototype.canvasHeight = function () {
-  return this.rows * this.squareWidth();
+  return this.rows * this.padding;
 };
 
 SquareMazeCanvasView.prototype.canvasWidth = function () {
-  return this.cols * this.squareWidth();
-};
-
-SquareMazeCanvasView.prototype.squareWidth = function () {
-  return this.padding + this.wallWidth;
+  return this.cols * this.padding;
 };
 
 SquareMazeCanvasView.prototype.mazeRowToY = function (row) {
-  return row * this.squareWidth();
+  return row * this.padding;
 };
 
 SquareMazeCanvasView.prototype.mazeColToX = function (col) {
-  return col * this.squareWidth();
+  return col * this.padding;
 };
 
 SquareMazeCanvasView.prototype.refreshInterior = function (maze) {
@@ -42,11 +38,11 @@ SquareMazeCanvasView.prototype.refreshBorder = function () {
 };
 
 SquareMazeCanvasView.prototype.refreshCur = function (row, col) {
-  var y = this.mazeRowToY(row) + this.squareWidth() / 2,
-      x = this.mazeColToX(col) + this.squareWidth() / 2;
+  var y = this.mazeRowToY(row) + this.padding / 2,
+      x = this.mazeColToX(col) + this.padding / 2;
 
   this.ctx.beginPath();
-  this.ctx.arc(x, y, this.squareWidth() / 3, 0, 2 * Math.PI, false);
+  this.ctx.arc(x, y, this.padding / 3, 0, 2 * Math.PI, false);
   this.ctx.fillStyle = 'red';
   this.ctx.fill();
 };
