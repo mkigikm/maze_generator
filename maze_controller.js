@@ -9,20 +9,25 @@ function MazeController () {
 };
 
 MazeController.prototype.setup = function () {
-  var rows          = parseInt($('#rows').val()),
-      cols          = parseInt($('#cols').val()),
-      row           = parseInt($('#start_row').val()),
-      col           = parseInt($('#start_col').val()),
-      sideLength    = parseInt($('#side_length').val()),
-      wallThickness = parseInt($('#wall_thickness').val());
+  var rows           = parseInt($('#rows').val()),
+      cols           = parseInt($('#cols').val()),
+      row            = parseInt($('#start_row').val()),
+      col            = parseInt($('#start_col').val()),
+      sideLength     = parseInt($('#side_length').val()),
+      wallThickness  = parseInt($('#wall_thickness').val()),
+      canvas         = $('#maze_display').get(0);
 
   this.stop();
-  this.maze = new SquareMaze(rows, cols, [row, col]);
-  this.view = new SquareMazeCanvasView(rows, cols, sideLength, wallThickness,
-    $('#maze_display').get(0));
-  // this.maze = new HexMaze(rows, cols, [row, col]);
-  // this.view = new HexMazeCanvasView(rows, cols, sideLength, wallThickness,
-  //   $('#maze_display').get(0));
+
+  if ($('#square_maze').is(':checked')) {
+    this.maze = new SquareMaze(rows, cols, [row, col]);
+    this.view = new SquareMazeCanvasView(rows, cols, sideLength, wallThickness,
+      canvas);
+  } else {
+    this.maze = new HexMaze(rows, cols, [row, col]);
+    this.view = new HexMazeCanvasView(rows, cols, sideLength, wallThickness,
+      canvas);
+  }
 
   this.view.refresh(this.maze);
   this.view.refreshCur(row, col);
