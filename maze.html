@@ -1,15 +1,78 @@
 <html>
   <head>
     <title>Amazing generator</title>
-    <link rel="stylesheet" href="maze.css" type="text/css">
+    
     <script type="text/javascript" src="maze.js"></script>
     <script type="text/javascript" src="maze_controller.js"></script>
+    <script type="text/javascript" src="maze_canvas_view.js"></script>
     <script type="text/javascript" src="util.js"></script>
   </head>
+
   <body onload="setup()">
-    <main id="maze_area">
+
+    <main class="controls">
+      <h2>Settings</h2>
+      <ul>
+        <li>
+          <label>
+            Rows
+            <input type="number" name="rows" value="50" min="1" max="1000">
+          </label>
+        </li>
+        <li>
+          <label>
+            Columns
+            <input type="number" name="rows" value="150" min="1" max="1000">
+          </label>
+        </li>
+        <li>
+          <label>
+            Square Width
+            <input type="number" name="square_width" value="10" min="1" max="50">
+          </label>
+        </li>
+        <li>
+          <label>
+            Wall Width
+            <input type="number" name="wall_width" value="1" min="1" max="20">
+          </label>
+        </li>
+        <li>
+          <label>
+            Start Row
+            <input type="number" name="start_row" value="0" min="0" max="999">
+          </label>
+        </li>
+        <li>
+          <label>
+            Start Column
+            <input type="number" name="start_column" value="0" min="0" max="999">
+          </label>
+        </li>
+      </ul>
+
+      <h2>Controls</h2>
+      <ul>
+        <li>
+          <label>
+            Step
+            <button onclick="c.step()">Step</button>
+          </label>
+        </li>
+        <li>
+          <label>
+            <button onclick="c.go()">Go</button>
+          </label>
+        </li>
+        <li>
+          <label>
+            <button onclick="c.stop()">Stop</button>
+          </label>
+        </li>
+      </ul>
     </main>
-    <button onclick="c.step()">Step</button>
-    <button onclick="c.go()">Go</button>
+
+    <canvas></canvas>
+
   </body>
 </html>

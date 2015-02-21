@@ -1,11 +1,11 @@
-function Maze (rows, cols, row, col) {
+function Maze (rows, cols, start) {
   var i, j;
 
   this.grid  = new Array(rows);
   this.rows  = rows;
   this.cols  = cols;
   this.stack = [];
-  this.cur   = [row, col];
+  this.cur   = start;
   this.start = this.cur;
 
   for (row = 0; row < rows; row++) {
