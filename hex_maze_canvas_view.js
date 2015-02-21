@@ -17,15 +17,12 @@ HexMazeCanvasView.prototype.refreshInterior = function (maze) {
 
   for (row = 0; row < this.rows; row++) {
     for (col = 0; col < this.cols; col++) {
-      this.refreshCur(row, col);
       this.refreshHex(maze, row, col);
-      // console.log("center", this.centerX(row, col), this.centerY(row, col))
     }
   }
 };
 
 HexMazeCanvasView.prototype.refreshCur = function (row, col) {
-  // console.log("center is ", this.centerX(row), this.centerY(col), "for", row, col)
   this.ctx.beginPath();
   this.ctx.arc(this.centerX(row, col), this.centerY(row, col), 5, 0, 2 * Math.PI, false);
   this.ctx.fillStyle = 'red';
@@ -44,7 +41,7 @@ HexMazeCanvasView.prototype.centerX = function (row, col) {
 };
 
 HexMazeCanvasView.prototype.centerY = function (row, col) {
-  return row * 16 + 8;
+  return row * 8 + 8;
 };
 
 HexMazeCanvasView.prototype.refreshHex = function (maze, row, col) {
