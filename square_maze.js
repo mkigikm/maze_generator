@@ -1,23 +1,8 @@
-SquareMaze.prototype = new Maze();
-SquareMaze.prototype.constructor = Maze;
 function SquareMaze (rows, cols, start) {
-  var i, j;
-
-  this.grid  = new Array(rows);
-  this.rows  = rows;
-  this.cols  = cols;
-  this.stack = [];
-  this.cur   = start;
-  this.start = this.cur;
-
-  for (row = 0; row < rows; row++) {
-    this.grid[row] = new Int32Array(this.colShift(cols) + 1);
-
-    for (col = 0; col < cols; col++) {
-      this.grid[row][col] = ~0;
-    }
-  }
+  Maze.call(this, rows, cols, start);
 };
+
+SquareMaze.prototype = Object.create(Maze.prototype);
 
 SquareMaze.DOWN  = 1;
 SquareMaze.RIGHT = 2;
@@ -28,8 +13,6 @@ SquareMaze.DIRS      = [SquareMaze.DOWN, SquareMaze.RIGHT,
   SquareMaze.UP, SquareMaze.LEFT];
 SquareMaze.UNVISITED = SquareMaze.DOWN | SquareMaze.RIGHT |
   SquareMaze.UP | SquareMaze.LEFT;
-
-SquareMaze.CELLS_PER_INT = 16;
 
 SquareMaze.prototype.dirs = function () {
   return SquareMaze.DIRS;
@@ -47,14 +30,6 @@ SquareMaze.prototype.colOffset = function (dir) {
     return 0;
   }
   return dir === SquareMaze.RIGHT ? 1 : -1;
-};
-
-SquareMaze.prototype.bitShift = function (col) {
-  return (col % SquareMaze.CELLS_PER_INT) * 2;
-};
-
-SquareMaze.prototype.colShift = function (col) {
-  return col / SquareMaze.CELLS_PER_INT | 0;
 };
 
 SquareMaze.prototype.downWall = function (row, col) {
@@ -75,10 +50,6 @@ SquareMaze.prototype.rightWall = function (row, col) {
 SquareMaze.prototype.leftWall = function (row, col) {
   return col === 0 ? SquareMaze.LEFT :
     this.rightWall(row, col - 1) << 2;
-};
-
-SquareMaze.prototype.visited = function (row, col) {
-  return this.walls(row, col) !== SquareMaze.UNVISITED;
 };
 
 SquareMaze.prototype.walls = function (row, col) {
