@@ -18,7 +18,7 @@ MazeController.prototype.setup = function () {
 
   this.stop();
   this.maze = new SquareMaze(rows, cols, [row, col]);
-  this.view = new MazeCanvasView(rows, cols, squareWidth, wallWidth,
+  this.view = new SquareMazeCanvasView(rows, cols, squareWidth, wallWidth,
     $('#maze_display').get(0));
   console.log(rows, cols, squareWidth, wallWidth)
   console.log(row, col)
