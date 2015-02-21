@@ -1,23 +1,23 @@
-function SquareMazeCanvasView (rows, cols, padding, wallWidth, canvas) {
-  MazeCanvasView.call(this, rows, cols, padding, wallWidth, canvas);
+function SquareMazeCanvasView (rows, cols, sideLength, wallThickness, canvas) {
+  MazeCanvasView.call(this, rows, cols, sideLength, wallThickness, canvas);
 };
 
 SquareMazeCanvasView.prototype = Object.create(MazeCanvasView.prototype);
 
 SquareMazeCanvasView.prototype.canvasHeight = function () {
-  return this.rows * this.padding;
+  return this.rows * this.sideLength;
 };
 
 SquareMazeCanvasView.prototype.canvasWidth = function () {
-  return this.cols * this.padding;
+  return this.cols * this.sideLength;
 };
 
 SquareMazeCanvasView.prototype.mazeRowToY = function (row) {
-  return row * this.padding;
+  return row * this.sideLength;
 };
 
 SquareMazeCanvasView.prototype.mazeColToX = function (col) {
-  return col * this.padding;
+  return col * this.sideLength;
 };
 
 SquareMazeCanvasView.prototype.refreshInterior = function (maze) {

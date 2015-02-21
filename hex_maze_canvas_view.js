@@ -1,5 +1,5 @@
-function HexMazeCanvasView (rows, cols, padding, wallWidth, canvas) {
-  MazeCanvasView.call(this, rows, cols, padding, wallWidth, canvas);
+function HexMazeCanvasView (rows, cols, sideLength, wallThickness, canvas) {
+  MazeCanvasView.call(this, rows, cols, sideLength, wallThickness, canvas);
 };
 
 HexMazeCanvasView.prototype = Object.create(MazeCanvasView.prototype);
@@ -32,43 +32,52 @@ HexMazeCanvasView.prototype.refreshCur = function (row, col) {
 HexMazeCanvasView.prototype.refreshBorder = function () {
 };
 
-HexMazeCanvasView.prototype.hexWidth = function () {
-  return 22;
+HexMazeCanvasView.prototype.hexHeight = function () {
+  return 16 * this.sideLength / 5;
 };
 
 HexMazeCanvasView.prototype.centerX = function (row, col) {
-  return col * 32 + (row % 2 === 0 ? 11 : 27);
+  var offset = row % 2 === 0 ? this.hexHeight() / 2 : this.hexHeight();
+  return col * this.hexHeight() + offset - this.sideLength / 2;
 };
 
 HexMazeCanvasView.prototype.centerY = function (row, col) {
-  return row * 8 + 8;
+  return (row + 1) * this.hexHeight() / 4;
 };
 
+// The geometry here looks like this
+//   (center)   r   /r+a
+//                 /
+//                /
+//   ___________b/
 HexMazeCanvasView.prototype.refreshHex = function (maze, row, col) {
   var x = this.centerX(row, col),
-      y = this.centerY(row);
+      y = this.centerY(row),
+      a = this.sideLength * 3 / 5;
+      b = this.sideLength * 4 / 5;
+      r = this.sideLength / 2;
 
   if (maze.drWall(row, col)) {
-    this.drawWall(x + 11, y, x + 5, y + 8);
+    this.drawWall(x + (r + a), y, x + r, y + b);
   }
 
   if (maze.dWall(row, col)) {
-    this.drawWall(x + 5, y + 8, x - 5, y + 8);
+    this.drawWall(x + r, y + b, x - r, y + b);
   }
 
   if (maze.dlWall(row, col)) {
-    this.drawWall(x - 5, y + 8, x - 11, y);
+    this.drawWall(x - r, y + b, x - (r + a), y);
   }
 
   if (maze.urWall(row, col)) {
-    this.drawWall(x + 11, y, x + 5, y - 8);
+    this.drawWall(x + (r + a), y, x + r, y - b);
   }
 
   if (maze.uWall(row, col)) {
-    this.drawWall(x + 5, y - 8, x - 5, y - 8);
+    this.drawWall(x + r, y - b, x - r, y - b);
   }
 
   if (maze.ulWall(row, col)) {
-    this.drawWall(x - 5, y - 8, x - 11, y);
+    this.drawWall(x - r, y - b, x - (r + a), y);
   }
 };

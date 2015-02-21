@@ -9,21 +9,21 @@ function MazeController () {
 };
 
 MazeController.prototype.setup = function () {
-  var rows        = parseInt($('#rows').val()),
-      cols        = parseInt($('#cols').val()),
-      row         = parseInt($('#start_row').val()),
-      col         = parseInt($('#start_col').val()),
-      squareWidth = parseInt($('#square_width').val()),
-      wallWidth   = parseInt($('#wall_width').val());
+  var rows          = parseInt($('#rows').val()),
+      cols          = parseInt($('#cols').val()),
+      row           = parseInt($('#start_row').val()),
+      col           = parseInt($('#start_col').val()),
+      sideLength    = parseInt($('#side_length').val()),
+      wallThickness = parseInt($('#wall_thickness').val());
 
   this.stop();
   // this.maze = new SquareMaze(rows, cols, [row, col]);
   // this.view = new SquareMazeCanvasView(rows, cols, squareWidth, wallWidth,
   //   $('#maze_display').get(0));
-  this.maze = new HexMaze(10, 10, [row, col]);
-  this.view = new HexMazeCanvasView(10, 10, squareWidth, wallWidth,
+  this.maze = new HexMaze(rows, cols, [row, col]);
+  this.view = new HexMazeCanvasView(rows, cols, sideLength, wallThickness,
     $('#maze_display').get(0));
-  console.log(rows, cols, squareWidth, wallWidth)
+  console.log(rows, cols, sideLength, wallThickness)
   console.log(row, col)
 
   this.view.refresh(this.maze);

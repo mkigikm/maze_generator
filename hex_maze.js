@@ -60,40 +60,32 @@ HexMaze.prototype.dlWall = function (row, col) {
 };
 
 HexMaze.prototype.ulWall = function (row, col) {
-  var nrow, ncol;
+  var nrow = this.rowAdd(row, col, HexMaze.UL),
+      ncol = this.colAdd(row, col, HexMaze.UL);
 
-  if (row === 0 || this.cols - 1 === col) {
+  if (this.outOfBounds(nrow, ncol)) {
     return HexMaze.UL;
   }
-
-  nrow = this.rowAdd(row, col, HexMaze.UL);
-  ncol = this.colAdd(row, col, HexMaze.UL);
   return this.drWall(nrow, ncol, HexMaze.DR) << 3;
 };
 
 HexMaze.prototype.uWall = function (row, col) {
-  var nrow, ncol;
+  var nrow = this.rowAdd(row, col, HexMaze.U),
+      ncol = this.colAdd(row, col, HexMaze.U);
 
-  if (row === 0 || row === 1) {
+  if (this.outOfBounds(nrow, ncol)) {
     return HexMaze.U;
   }
-
-  nrow = this.rowAdd(row, col, HexMaze.U);
-  ncol = this.colAdd(row, col, HexMaze.U);
-
   return this.dWall(nrow, ncol, HexMaze.D) << 3;
 };
 
 HexMaze.prototype.urWall = function (row, col) {
-  var nrow, ncol;
+  var nrow = this.rowAdd(row, col, HexMaze.UR),
+      ncol = this.colAdd(row, col, HexMaze.UR);
 
-  if (row === 0 || col === this.cols - 1) {
-    return HexMaze.UR;
+  if (this.outOfBounds(nrow, ncol)) {
+    return HexMaze.U;
   }
-
-  nrow = this.rowAdd(row, col, HexMaze.UR);
-  ncol = this.colAdd(row, col, HexMaze.UR);
-
   return this.dlWall(nrow, ncol, HexMaze.DL) << 3;
 };
 
