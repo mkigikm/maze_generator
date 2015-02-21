@@ -43,6 +43,10 @@ Maze.prototype.colShift = function (col) {
   return col / this.cellsPerInt | 0;
 };
 
+Maze.prototype.nativeWall = function (row, col, dir) {
+  return (this.grid[row][this.colShift(col)] >> this.bitShift(col)) & dir;
+};
+
 Maze.prototype.visited = function (row, col) {
   return this.walls(row, col) !== this.unvisited;
 };

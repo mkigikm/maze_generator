@@ -1,23 +1,8 @@
-HexMaze.prototype = new Maze();
-HexMaze.prototype.constructor = Maze;
 function HexMaze (rows, cols, start) {
-  var i, j;
-
-  this.grid  = new Array(rows);
-  this.rows  = rows;
-  this.cols  = cols;
-  this.stack = [];
-  this.cur   = start;
-  this.start = this.cur;
-
-  for (row = 0; row < rows; row++) {
-    this.grid[row] = new Int32Array(this.colShift(cols) + 1);
-
-    for (col = 0; col < cols; col++) {
-      this.grid[row][col] = ~0;
-    }
-  }
+  Maze.call(this, rows, cols, start);
 };
+
+HexMaze.prototype = Object.create(Maze.prototype);
 
 HexMaze.DR =  1;
 HexMaze.D  =  2;
@@ -28,11 +13,6 @@ HexMaze.UR = 32;
 
 HexMaze.DIRS = [HexMaze.DR, HexMaze.D, HexMaze.DL,
   HexMaze.UL, HexMaze.U, HexMaze.UR];
-
-HexMaze.UNVISITED = HexMaze.DR | HexMaze.D | HexMaze.DL |
-  HexMaze.UL | HexMaze.U | HexMaze.UR;
-
-HexMaze.CELLS_PER_INT = 10;
 
 HexMaze.prototype.dirs = function () {
   return HexMaze.DIRS;
@@ -49,31 +29,37 @@ HexMaze.prototype.colOffset = function (dir) {
   return dir === HexMaze.UR | HexMaze.DR ? 1 : -1;
 };
 
-HexMaze.prototype.bitShift = function (col) {
-  return (col % HexMaze.CELLS_PER_INT) * 2;
+HexMaze.prototype.drWall = function (row, col) {
+  return this.nativeWall(row, col, HexMaze.DR);
 };
 
-HexMaze.prototype.colShift = function (col) {
-  return col / HexMaze.CELLS_PER_INT | 0;
+HexMaze.prototype.dWall = function (row, col) {
+  return this.nativeWall(row, col, HexMaze.D);
 };
 
-HexMaze.prototype.downWall = function (row, col) {
-  return (this.grid[row][this.colShift(col)] >> this.bitShift(col))
-    & HexMaze.DOWN;
+HexMaze.prototype.dlWall = function (row, col) {
+  return this.nativeWall(row, col, HexMaze.D);
 };
 
-HexMaze.prototype.upWall = function (row, col) {
+HexMaze.prototype.ulWall = function (row, col) {
+  return row === 0 ? HexMaze.UL :
+    this.drWall(row - 1, col - 1) << 3;
+};
+
+HexMaze.prototype.uWall = function (row, col) {
   return row === 0 ? HexMaze.UP :
-    this.downWall(row - 1, col) << 3;
+    this.dWall(row - 1, col) << 3;
 };
 
-HexMaze.prototype.visited = function (row, col) {
-  return this.walls(row, col) !== HexMaze.UNVISITED;
+HexMaze.prototype.urWall = function (row, col) {
+  return row === 0 ? HexMaze.UR :
+    this.dlWall(row - 1, col + 1) << 3;
 };
 
 SquareMaze.prototype.walls = function (row, col) {
-  return this.downWall(row, col) | this.upWall(row, col) |
-    this.leftWall(row, col) | this.rightWall(row, col);
+  return this.drWall(row, col) | this.dWall(row, col) |
+    this.dlWall(row, col) | this.ulWall(row, col) |
+    this.uWall(row, col)  | this.urWall(row, col);
 };
 
 SquareMaze.prototype.crushWall = function (row, col, dir) {

@@ -11,8 +11,6 @@ SquareMaze.LEFT  = 8;
 
 SquareMaze.DIRS      = [SquareMaze.DOWN, SquareMaze.RIGHT,
   SquareMaze.UP, SquareMaze.LEFT];
-SquareMaze.UNVISITED = SquareMaze.DOWN | SquareMaze.RIGHT |
-  SquareMaze.UP | SquareMaze.LEFT;
 
 SquareMaze.prototype.dirs = function () {
   return SquareMaze.DIRS;
@@ -33,23 +31,21 @@ SquareMaze.prototype.colOffset = function (dir) {
 };
 
 SquareMaze.prototype.downWall = function (row, col) {
-  return (this.grid[row][this.colShift(col)] >> this.bitShift(col))
-    & SquareMaze.DOWN;
+  return this.nativeWall(row, col, SquareMaze.DOWN);
+};
+
+SquareMaze.prototype.rightWall = function (row, col) {
+  return this.nativeWall(row, col, SquareMaze.RIGHT);
 };
 
 SquareMaze.prototype.upWall = function (row, col) {
   return row === 0 ? SquareMaze.UP :
-    this.downWall(row - 1, col) << 2;
-};
-
-SquareMaze.prototype.rightWall = function (row, col) {
-  return (this.grid[row][this.colShift(col)] >> this.bitShift(col))
-    & SquareMaze.RIGHT;
+    this.downWall(row - 1, col) << this.bits;
 };
 
 SquareMaze.prototype.leftWall = function (row, col) {
   return col === 0 ? SquareMaze.LEFT :
-    this.rightWall(row, col - 1) << 2;
+    this.rightWall(row, col - 1) << this.bits;
 };
 
 SquareMaze.prototype.walls = function (row, col) {
