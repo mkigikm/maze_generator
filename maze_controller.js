@@ -17,14 +17,12 @@ MazeController.prototype.setup = function () {
       wallThickness = parseInt($('#wall_thickness').val());
 
   this.stop();
-  // this.maze = new SquareMaze(rows, cols, [row, col]);
-  // this.view = new SquareMazeCanvasView(rows, cols, squareWidth, wallWidth,
-  //   $('#maze_display').get(0));
-  this.maze = new HexMaze(rows, cols, [row, col]);
-  this.view = new HexMazeCanvasView(rows, cols, sideLength, wallThickness,
+  this.maze = new SquareMaze(rows, cols, [row, col]);
+  this.view = new SquareMazeCanvasView(rows, cols, sideLength, wallThickness,
     $('#maze_display').get(0));
-  console.log(rows, cols, sideLength, wallThickness)
-  console.log(row, col)
+  // this.maze = new HexMaze(rows, cols, [row, col]);
+  // this.view = new HexMazeCanvasView(rows, cols, sideLength, wallThickness,
+  //   $('#maze_display').get(0));
 
   this.view.refresh(this.maze);
   this.view.refreshCur(row, col);

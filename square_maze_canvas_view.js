@@ -38,11 +38,11 @@ SquareMazeCanvasView.prototype.refreshBorder = function () {
 };
 
 SquareMazeCanvasView.prototype.refreshCur = function (row, col) {
-  var y = this.mazeRowToY(row) + this.padding / 2,
-      x = this.mazeColToX(col) + this.padding / 2;
+  var y = this.mazeRowToY(row) + this.sideLength / 2,
+      x = this.mazeColToX(col) + this.sideLength / 2;
 
   this.ctx.beginPath();
-  this.ctx.arc(x, y, this.padding / 3, 0, 2 * Math.PI, false);
+  this.ctx.arc(x, y, this.sideLength / 3, 0, 2 * Math.PI, false);
   this.ctx.fillStyle = 'red';
   this.ctx.fill();
 };
