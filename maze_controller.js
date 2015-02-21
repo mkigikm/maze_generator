@@ -20,8 +20,8 @@ MazeController.prototype.setup = function () {
   // this.maze = new SquareMaze(rows, cols, [row, col]);
   // this.view = new SquareMazeCanvasView(rows, cols, squareWidth, wallWidth,
   //   $('#maze_display').get(0));
-  this.maze = new HexMaze(rows, cols, [row, col]);
-  this.view = new HexMazeCanvasView(5, 5, squareWidth, wallWidth,
+  this.maze = new HexMaze(4, 4, [row, col]);
+  this.view = new HexMazeCanvasView(4, 4, squareWidth, wallWidth,
     $('#maze_display').get(0));
   console.log(rows, cols, squareWidth, wallWidth)
   console.log(row, col)

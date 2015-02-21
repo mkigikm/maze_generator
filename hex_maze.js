@@ -18,15 +18,33 @@ HexMaze.prototype.dirs = function () {
   return HexMaze.DIRS;
 };
 
-HexMaze.prototype.rowOffset = function (dir) {
-  return (dir & (HexMaze.UL | HexMaze.U | HexMaze.UR)) > 0 ? -1 : 1;
+HexMaze.prototype.rowAdd = function (row, col, dir) {
+  switch (dir) {
+    case HexMaze.D:
+      return row + 2;
+    case HexMaze.U:
+      return row - 2;
+    case HexMaze.DR:
+    case HexMaze.DL:
+      return row + 1;
+    case HexMaze.UR:
+    case HexMaze.UL:
+      return row - 1;
+  }
 };
 
-HexMaze.prototype.colOffset = function (dir) {
-  if ((dir & (HexMaze.UP | HexMaze.DOWN)) > 0) {
-    return 0;
+HexMaze.prototype.colAdd = function (row, col, dir) {
+  switch (dir) {
+    case HexMaze.D:
+    case HexMaze.U:
+      return col;
+    case HexMaze.DR:
+    case HexMaze.UR:
+      return col + (row % 2 ? 1 : 0);
+    case HexMaze.DL:
+    case HexMaze.UL:
+      return col + (row % 2 ? 0 : -1);
   }
-  return dir === HexMaze.UR | HexMaze.DR ? 1 : -1;
 };
 
 HexMaze.prototype.drWall = function (row, col) {
@@ -38,45 +56,64 @@ HexMaze.prototype.dWall = function (row, col) {
 };
 
 HexMaze.prototype.dlWall = function (row, col) {
-  return this.nativeWall(row, col, HexMaze.D);
+  return this.nativeWall(row, col, HexMaze.DL);
 };
 
 HexMaze.prototype.ulWall = function (row, col) {
-  return row === 0 ? HexMaze.UL :
-    this.drWall(row - 1, col - 1) << 3;
+  var nrow, ncol;
+
+  if (row === 0 || this.cols - 1 === col) {
+    return HexMaze.UL;
+  }
+
+  nrow = this.rowAdd(row, col, HexMaze.UL);
+  ncol = this.colAdd(row, col, HexMaze.UL);
+  return this.drWall(nrow, ncol, HexMaze.DR) << 3;
 };
 
 HexMaze.prototype.uWall = function (row, col) {
-  return row === 0 ? HexMaze.UP :
-    this.dWall(row - 1, col) << 3;
+  var nrow, ncol;
+
+  if (row === 0 || row === 1) {
+    return HexMaze.U;
+  }
+
+  nrow = this.rowAdd(row, col, HexMaze.U);
+  ncol = this.colAdd(row, col, HexMaze.U);
+
+  return this.dWall(nrow, ncol, HexMaze.D) << 3;
 };
 
 HexMaze.prototype.urWall = function (row, col) {
-  return row === 0 ? HexMaze.UR :
-    this.dlWall(row - 1, col + 1) << 3;
+  var nrow, ncol;
+
+  if (row === 0 || col === this.cols - 1) {
+    return HexMaze.UR;
+  }
+
+  nrow = this.rowAdd(row, col, HexMaze.UR);
+  ncol = this.colAdd(row, col, HexMaze.UR);
+
+  return this.dlWall(nrow, ncol, HexMaze.DL) << 3;
 };
 
-SquareMaze.prototype.walls = function (row, col) {
+HexMaze.prototype.walls = function (row, col) {
   return this.drWall(row, col) | this.dWall(row, col) |
     this.dlWall(row, col) | this.ulWall(row, col) |
     this.uWall(row, col)  | this.urWall(row, col);
 };
 
-SquareMaze.prototype.crushWall = function (row, col, dir) {
-  switch (dir) {
-    case HexMaze.DL:
-    case HexMaze.D:
-    case HexMaze.DR:
-      this.grid[row][this.colShift(col)] ^=
-        dir << this.bitShift(col);
-      break;
-    case HexMaze.UL:
-      this.crushWall(row - 1, col - 1, HexMaze.DR);
-      break;
-    case HexMaze.U:
-      this.crushWall(row - 1, col, HexMaze.D);
-      break;
-    case HexMaze.UR:
-      this.crushWall(row - 1, col + 1, HexMaze.DL);
+HexMaze.prototype.crushWall = function (row, col, dir) {
+  var nrow, ncol;
+
+  if (dir & (HexMaze.DL | HexMaze.D | HexMaze.DR)) {
+    this.crushNativeWall(row, col, dir);
+  } else {
+    this.crushNativeWall(this.rowAdd(row, col, dir),
+      this.colAdd(row, col, dir), dir >> 3);
   }
 };
+
+HexMaze.prototype.crushNativeWall = function (row, col, dir) {
+  this.grid[row][this.colShift(col)] ^= dir << this.bitShift(col);
+}

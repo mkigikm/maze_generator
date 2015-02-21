@@ -16,14 +16,14 @@ SquareMaze.prototype.dirs = function () {
   return SquareMaze.DIRS;
 };
 
-SquareMaze.prototype.rowOffset = function (dir) {
+SquareMaze.prototype.rowOffset = function (row, col, dir) {
   if ((dir & (SquareMaze.LEFT | SquareMaze.RIGHT)) > 0) {
     return 0;
   }
   return dir === SquareMaze.DOWN ? 1 : -1;
 };
 
-SquareMaze.prototype.colOffset = function (dir) {
+SquareMaze.prototype.colOffset = function (row, col, dir) {
   if ((dir & (SquareMaze.UP | SquareMaze.DOWN)) > 0) {
     return 0;
   }

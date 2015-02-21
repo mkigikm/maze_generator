@@ -31,8 +31,8 @@ Maze.prototype.setupBits = function () {
 };
 
 Maze.prototype.outOfBounds = function (row, col) {
-  return row === -1 || row === this.rows ||
-    col === -1 || col === this.cols;
+  return row < 0 || row >= this.rows ||
+    col < 0 || col >= this.cols;
 };
 
 Maze.prototype.bitShift = function (col) {
@@ -58,7 +58,7 @@ Maze.prototype.visit = function () {
   if (newCur !== null) {
     return [this.cur = newCur, this.cur];
   }
-
+  console.log("backtracking")
   //backtrack
   if (this.stack.length > 0) {
     return [this.cur = this.stack.pop(), this.cur];
@@ -86,14 +86,19 @@ Maze.prototype.tryToCrush = function () {
 };
 
 Maze.prototype.tryDirection = function (dir) {
-  var row = this.cur[0], nrow = row + this.rowOffset(dir)
-      col = this.cur[1], ncol = col + this.colOffset(dir);
-
+  var row = this.cur[0], col = this.cur[1],
+      nrow = this.rowAdd(row, col, dir),
+      ncol = this.colAdd(row, col, dir);
+  console.log("oOB", nrow, ncol, this.outOfBounds(nrow, ncol))
+  if (this.outOfBounds(nrow, ncol)) return null;
   if (this.outOfBounds(nrow, ncol) || this.visited(nrow, ncol)) {
+    console.log("visited", this.visited(nrow, ncol), this.walls(nrow, ncol))
     return null;
   }
-
+  console.log("trying", row, col, dir)
   this.crushWall(row, col, dir);
+  console.log("crushed", row, col, dir)
+  console.log("new cur", nrow, ncol)
   this.stack.push([row, col]);
   return [nrow, ncol];
 };
