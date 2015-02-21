@@ -8,6 +8,9 @@ function MazeCanvasView (rows, cols, padding, wallWidth, canvas) {
 
   canvas.height = this.canvasHeight();
   canvas.width  = this.canvasWidth();
+  console.log(canvas.height)
+  console.log(canvas.width)
+  console.log(this.squareWidth())
 };
 
 MazeCanvasView.prototype.canvasHeight = function () {

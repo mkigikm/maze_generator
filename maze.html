@@ -1,78 +1,80 @@
 <html>
   <head>
     <title>Amazing generator</title>
-    
+    <link rel="stylesheet" href="maze.css">
     <script type="text/javascript" src="maze.js"></script>
     <script type="text/javascript" src="maze_controller.js"></script>
     <script type="text/javascript" src="maze_canvas_view.js"></script>
     <script type="text/javascript" src="util.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
   </head>
 
   <body onload="setup()">
-
+    <h1>The Amazing Generator</h1>
     <main class="controls">
       <h2>Settings</h2>
       <ul>
         <li>
           <label>
             Rows
-            <input type="number" name="rows" value="50" min="1" max="1000">
+            <input type="number" id="rows" value="40" min="1" max="1000">
           </label>
         </li>
         <li>
           <label>
             Columns
-            <input type="number" name="rows" value="150" min="1" max="1000">
+            <input type="number" id="cols" value="80" min="1" max="1000">
           </label>
         </li>
         <li>
           <label>
             Square Width
-            <input type="number" name="square_width" value="10" min="1" max="50">
+            <input type="number" id="square_width" value="10" min="1" max="50">
           </label>
         </li>
         <li>
           <label>
             Wall Width
-            <input type="number" name="wall_width" value="1" min="1" max="20">
+            <input type="number" id="wall_width" value="3" min="1" max="20">
           </label>
         </li>
         <li>
           <label>
             Start Row
-            <input type="number" name="start_row" value="0" min="0" max="999">
+            <input type="number" id="start_row" value="0" min="0" max="999">
           </label>
         </li>
         <li>
           <label>
             Start Column
-            <input type="number" name="start_column" value="0" min="0" max="999">
+            <input type="number" id="start_col" value="0" min="0" max="999">
           </label>
+        </li>
+        <li>
+          <button onclick="c.setup()">Refresh</button>
         </li>
       </ul>
 
       <h2>Controls</h2>
       <ul>
         <li>
-          <label>
-            Step
-            <button onclick="c.step()">Step</button>
-          </label>
+          <button onclick="c.step()">Step</button>
         </li>
         <li>
-          <label>
-            <button onclick="c.go()">Go</button>
-          </label>
+          <button onclick="c.go()">Go</button>
         </li>
         <li>
-          <label>
-            <button onclick="c.stop()">Stop</button>
+          <button onclick="c.stop()">Stop</button>
+        </li>
+        <li>
+          <label>Wait Time (ms)
+            <input type="number" id="delay" value="10" min="1" max="5000">
           </label>
         </li>
       </ul>
     </main>
 
-    <canvas></canvas>
+    <canvas id="maze_display"></canvas>
 
   </body>
 </html>
