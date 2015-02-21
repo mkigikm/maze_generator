@@ -1,28 +1,28 @@
 function Maze (rows, cols, row, col) {
-  this.grid = new Array(rows);
-  this.rows = rows;
-  this.cols = cols;
+  var i, j;
 
-  for (var i = 0; i < rows; i++) {
-    this.grid[i] = new Int32Array(this.colShift(cols) + 1);
-
-    for (var j = 0; j < this.colShift(cols) + 1; j++) {
-      this.grid[i][j] = ~0;
-    }
-  }
-
+  this.grid  = new Array(rows);
+  this.rows  = rows;
+  this.cols  = cols;
   this.stack = [];
   this.cur   = [row, col];
   this.start = this.cur;
-}
+
+  for (row = 0; row < rows; row++) {
+    this.grid[row] = new Int32Array(this.colShift(cols) + 1);
+
+    for (col = 0; col < cols; col++) {
+      this.grid[row][col] = ~0;
+    }
+  }
+};
 
 Maze.DOWN  = 1;
 Maze.RIGHT = 2;
 Maze.UP    = 4;
 Maze.LEFT  = 8;
 
-Maze.DIRS = [Maze.DOWN, Maze.RIGHT, Maze.UP, Maze.LEFT];
-
+Maze.DIRS      = [Maze.DOWN, Maze.RIGHT, Maze.UP, Maze.LEFT];
 Maze.UNVISITED = Maze.DOWN | Maze.RIGHT | Maze.UP | Maze.LEFT;
 
 Maze.CELLS_PER_INT = 16;
@@ -30,21 +30,15 @@ Maze.CELLS_PER_INT = 16;
 Maze.prototype.rowOffset = function (dir) {
   if ((dir & (Maze.LEFT | Maze.RIGHT)) > 0) {
     return 0;
-  } else if (dir === Maze.DOWN) {
-    return 1;
-  } else {
-    return -1;
   }
+  return dir === Maze.DOWN ? 1 : -1;
 };
 
 Maze.prototype.colOffset = function (dir) {
   if ((dir & (Maze.UP | Maze.DOWN)) > 0) {
     return 0;
-  } else if (dir === Maze.RIGHT) {
-    return 1;
-  } else {
-    return -1;
   }
+  return dir === Maze.RIGHT ? 1 : -1;
 };
 
 Maze.prototype.bitShift = function (col) {
@@ -52,8 +46,8 @@ Maze.prototype.bitShift = function (col) {
 };
 
 Maze.prototype.colShift = function (col) {
-  return ~~(col / Maze.CELLS_PER_INT);
-}
+  return col / Maze.CELLS_PER_INT | 0;
+};
 
 Maze.prototype.downWall = function (row, col) {
   return (this.grid[row][this.colShift(col)] >> this.bitShift(col))
@@ -106,14 +100,15 @@ Maze.prototype.crushWall = function (row, col, dir) {
 };
 
 Maze.prototype.tryToCrush = function () {
-  var row = this.cur[0];
-  var col = this.cur[1];
-  var dirs = shuffle(Maze.DIRS);
+  var row = this.cur[0],
+      col = this.cur[1],
+      dirs = shuffle(Maze.DIRS),
+      i, dir, nrow, ncol;
 
-  for (var i = 0; i < dirs.length; i++) {
-    var dir  = dirs[i];
-    var nrow = row + this.rowOffset(dir);
-    var ncol = col + this.colOffset(dir);
+  for (i = 0; i < Maze.DIRS.length; i++) {
+    dir  = dirs[i];
+    nrow = row + this.rowOffset(dir);
+    ncol = col + this.colOffset(dir);
     if (this.outOfBounds(nrow, ncol) || this.visited(nrow, ncol)) {
       continue;
     }
@@ -128,7 +123,9 @@ Maze.prototype.tryToCrush = function () {
 
 Maze.prototype.visit = function () {
   //try to forge a new path
-  var newCur = this.tryToCrush();
+  var newCur = this.tryToCrush(),
+      oldCur = this.cur;
+
   if (newCur !== null) {
     var changed = [this.cur, newCur];
     this.cur = newCur;
@@ -136,11 +133,8 @@ Maze.prototype.visit = function () {
     return changed;
   }
 
-  console.log("backtracking")
-
   //backtrack
   if (this.stack.length > 0) {
-    var oldCur = this.cur;
     this.cur = this.stack.pop();
     return [this.cur, oldCur];
   }
@@ -149,5 +143,6 @@ Maze.prototype.visit = function () {
 };
 
 Maze.prototype.finishedBuilding = function () {
-  return this.cur[0] === this.start[0] && this.cur[1] === this.start[1];
+  return this.cur[0] === this.start[0] &&
+         this.cur[1] === this.start[1];
 };
