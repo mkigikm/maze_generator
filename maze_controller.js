@@ -1,12 +1,6 @@
 var c;
 
 function setup () {
-  // var rows = 60,
-  //     cols = 125,
-  //     maze = new Maze(rows, cols, [0, 0]),
-  //     view = new MazeCanvasView(rows, col, 10, 3,
-  //       document.getElementsByTagName("canvas")[0]);
-
   c = new MazeController();
 };
 
@@ -23,7 +17,7 @@ MazeController.prototype.setup = function () {
       wallWidth   = parseInt($('#wall_width').val());
 
   this.stop();
-  this.maze = new Maze(rows, cols, [row, col]);
+  this.maze = new SquareMaze(rows, cols, [row, col]);
   this.view = new MazeCanvasView(rows, cols, squareWidth, wallWidth,
     $('#maze_display').get(0));
   console.log(rows, cols, squareWidth, wallWidth)
