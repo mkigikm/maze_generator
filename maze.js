@@ -47,3 +47,25 @@ Maze.prototype.finishedBuilding = function () {
   return this.cur[0] === this.start[0] &&
          this.cur[1] === this.start[1];
 };
+
+Maze.prototype.tryToCrush = function () {
+  var row = this.cur[0],
+      col = this.cur[1],
+      randomDirs = shuffle(this.dirs()),
+      i, dir, nrow, ncol;
+
+  for (i = 0; i < randomDirs.length; i++) {
+    dir  = randomDirs[i];
+    nrow = row + this.rowOffset(dir);
+    ncol = col + this.colOffset(dir);
+    if (this.outOfBounds(nrow, ncol) || this.visited(nrow, ncol)) {
+      continue;
+    }
+
+    this.crushWall(row, col, dir);
+    this.stack.push([row, col]);
+    return [nrow, ncol];
+  }
+
+  return null;
+};

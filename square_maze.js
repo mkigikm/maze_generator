@@ -31,6 +31,10 @@ SquareMaze.UNVISITED = SquareMaze.DOWN | SquareMaze.RIGHT |
 
 SquareMaze.CELLS_PER_INT = 16;
 
+SquareMaze.prototype.dirs = function () {
+  return SquareMaze.DIRS;
+};
+
 SquareMaze.prototype.rowOffset = function (dir) {
   if ((dir & (SquareMaze.LEFT | SquareMaze.RIGHT)) > 0) {
     return 0;
@@ -82,8 +86,6 @@ SquareMaze.prototype.walls = function (row, col) {
     this.leftWall(row, col) | this.rightWall(row, col);
 };
 
-
-
 SquareMaze.prototype.crushWall = function (row, col, dir) {
   switch (dir) {
     case SquareMaze.DOWN:
@@ -98,26 +100,4 @@ SquareMaze.prototype.crushWall = function (row, col, dir) {
       this.crushWall(row, col -1, SquareMaze.RIGHT);
       break;
   }
-};
-
-SquareMaze.prototype.tryToCrush = function () {
-  var row = this.cur[0],
-      col = this.cur[1],
-      dirs = shuffle(SquareMaze.DIRS),
-      i, dir, nrow, ncol;
-
-  for (i = 0; i < SquareMaze.DIRS.length; i++) {
-    dir  = dirs[i];
-    nrow = row + this.rowOffset(dir);
-    ncol = col + this.colOffset(dir);
-    if (this.outOfBounds(nrow, ncol) || this.visited(nrow, ncol)) {
-      continue;
-    }
-
-    this.crushWall(row, col, dir);
-    this.stack.push([row, col]);
-    return [nrow, ncol];
-  }
-
-  return null;
 };
