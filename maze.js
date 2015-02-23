@@ -1,12 +1,13 @@
 function Maze (rows, cols, start) {
   var row, col;
 
-  this.grid  = new Array(rows);
-  this.stack = [];
-  this.cur   = start;
-  this.start = this.cur;
-  this.rows  = rows;
-  this.cols  = cols;
+  this.grid     = new Array(rows);
+  this.stack    = [];
+  this.cur      = start;
+  this.start    = this.cur;
+  this.rows     = rows;
+  this.cols     = cols;
+  this.deadEnds = null;
 
   this.setupBits();
   for (row = 0; row < rows; row++) {
@@ -104,4 +105,54 @@ Maze.prototype.tryDirection = function (dir) {
   this.crushWall(row, col, dir);
   this.stack.push([row, col]);
   return [nrow, ncol];
+};
+
+Maze.prototype.fillInit = function () {
+  var row, col;
+
+  this.deadEnds = [];
+  for (row = 0; row < this.rows; row++) {
+    for (col = 0; col < this.cols; col++) {
+      if (this.isDeadEnd(row, col)) {
+        this.deadEnds.push([row, col]);
+      }
+    }
+  }
+};
+
+Maze.prototype.isDeadEnd = function (row, col) {
+  var count = 0;
+
+  this.wallChecks().forEach(function (wall) {
+    if (wall.call(this, row, col)) {
+      count += 1;
+    }
+  }, this);
+
+  return count === this.dirs().length - 1;
+};
+
+Maze.prototype.fill = function () {
+  var cur;
+
+  this.deadEnds = shuffle(this.deadEnds);
+  if (cur = this.deadEnds.pop()) {
+    this.fillDeadEnd(cur[0], cur[1]);
+  }
+
+  return cur;
+};
+
+Maze.prototype.fillDeadEnd = function (row, col) {
+  var nrow, ncol;
+
+  this.dirs().forEach(function (dir) {
+    this.buildWall(row, col, dir);
+    nrow = this.rowAdd(row, col, dir),
+    ncol = this.colAdd(row, col, dir);
+
+    if (!this.outOfBounds(nrow, ncol) && this.isDeadEnd(nrow, ncol)) {
+      this.deadEnds.push([nrow, ncol]);
+    }
+  }, this);
 };

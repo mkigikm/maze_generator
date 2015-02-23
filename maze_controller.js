@@ -59,6 +59,12 @@ MazeController.prototype.wireControls = function () {
     this.stop();
     this.generate();
   }.bind(this));
+
+  $('#fill').click(function () {
+    var fillProportion = parseFloat($('#fillProportion').val());
+    fillProportion = Math.min(Math.abs(fillProportion), 1) || 1;
+    this.fill(fillProportion);
+  }.bind(this));
 };
 
 MazeController.prototype.tick = function () {
@@ -94,4 +100,16 @@ MazeController.prototype.stop = function () {
 MazeController.prototype.generate = function () {
   this.maze.generate();
   this.view.refresh(this.maze);
+};
+
+MazeController.prototype.fill = function (fillProportion) {
+  var fillCount = this.maze.rows * this.maze.cols * fillProportion | 0;
+
+  this.maze.fillInit();
+  while (fillCount--) {
+    filled = this.maze.fill();
+    if (filled) {
+      this.view.fill(filled[0], filled[1]);
+    }
+  }
 };

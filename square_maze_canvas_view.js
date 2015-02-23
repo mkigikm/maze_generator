@@ -114,3 +114,14 @@ SquareMazeCanvasView.prototype.drawWall = function (x0, y0, x1, y1) {
 
   this.ctx.stroke();
 };
+
+SquareMazeCanvasView.prototype.fill = function (row, col) {
+  var x = this.cornerX(col),
+      y = this.cornerY(row);
+
+  this.ctx.save();
+  this.ctx.translate(x, y);
+  this.ctx.fillStyle = 'black';
+  this.ctx.fillRect(0, 0, this.sideLength, this.sideLength);
+  this.ctx.restore();
+};

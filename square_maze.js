@@ -48,6 +48,10 @@ SquareMaze.prototype.leftWall = function (row, col) {
     this.rightWall(row, col - 1) << this.bits;
 };
 
+SquareMaze.prototype.wallChecks = function () {
+  return [this.downWall, this.upWall, this.leftWall, this.rightWall];
+}
+
 SquareMaze.prototype.walls = function (row, col) {
   return this.downWall(row, col) | this.upWall(row, col) |
     this.leftWall(row, col) | this.rightWall(row, col);
@@ -65,6 +69,25 @@ SquareMaze.prototype.crushWall = function (row, col, dir) {
       break;
     case SquareMaze.LEFT:
       this.crushWall(row, col -1, SquareMaze.RIGHT);
+      break;
+  }
+};
+
+SquareMaze.prototype.buildWall = function (row, col, dir) {
+  if (this.outOfBounds(row, col)) {
+    return;
+  }
+
+  switch (dir) {
+    case SquareMaze.DOWN:
+    case SquareMaze.RIGHT:
+      this.grid[row][this.colShift(col)] |= dir << this.bitShift(col);
+      break;
+    case SquareMaze.UP:
+      this.buildWall(row - 1, col, SquareMaze.DOWN);
+      break;
+    case SquareMaze.LEFT:
+      this.buildWall(row, col - 1, SquareMaze.RIGHT);
       break;
   }
 };
