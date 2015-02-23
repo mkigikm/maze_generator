@@ -18,10 +18,10 @@ MazeController.prototype.setup = function () {
 
   this.stop();
 
-  if (row > rows) {
+  if (row >= rows) {
     row = 0;
   }
-  if (col > cols) {
+  if (col >= cols) {
     col = 0;
   }
 
@@ -46,10 +46,8 @@ MazeController.prototype.wireControls = function () {
   $('#go').click(function () {
     if (!this.timer) {
       this.go(parseInt($('#delay').val() || 10));
-      $('#go').text("Stop");
     } else {
       this.stop();
-      $('#go').text("Go");
     }
   }.bind(this));
 
@@ -59,7 +57,6 @@ MazeController.prototype.wireControls = function () {
 
   $('#generate').click(function () {
     this.stop();
-    $('#go').text("Go");
     this.generate();
   }.bind(this));
 };
@@ -75,6 +72,7 @@ MazeController.prototype.step = function () {
 
 MazeController.prototype.go = function (delay) {
   if (this.timer === null) {
+    $('#go').text("Stop");
     this.tick();
     this.timer = setInterval(function () {
         this.tick();
@@ -88,6 +86,7 @@ MazeController.prototype.go = function (delay) {
 };
 
 MazeController.prototype.stop = function () {
+  $('#go').text("Go");
   clearInterval(this.timer);
   this.timer = null;
 };

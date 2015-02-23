@@ -1,3 +1,22 @@
 .controls {
   float: left;
 }
+
+.controls ul {
+  list-style: none;
+}
+
+.controls h2 {
+  font-size: 20px;
+}
+
+h1 {
+  text-align: center;
+  width: 1200px;
+  margin: 0 auto;
+}
+
+main {
+  width: 1200px;
+  margin: 0 auto;
+}

@@ -16,7 +16,8 @@
 
   <body onload="setup()">
     <h1>The Amazing Generator</h1>
-    <main class="controls">
+    <main>
+      <div class="controls">
       <h2>Settings</h2>
       <ul>
         <li>
@@ -87,9 +88,11 @@
           </label>
         </li>
       </ul>
+      </div>
+
+      <div class="maze">
+        <canvas id="maze_display"></canvas>
+      </div>
     </main>
-
-    <canvas id="maze_display"></canvas>
-
   </body>
 </html>
