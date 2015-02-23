@@ -5,21 +5,26 @@ function HexMazeCanvasView (rows, cols, sideLength, wallThickness, canvas) {
 HexMazeCanvasView.prototype = Object.create(MazeCanvasView.prototype);
 
 HexMazeCanvasView.prototype.canvasHeight = function () {
-  return (this.rows + 1) * this.hexHeight();
+  return (this.rows + 1) * this.hexHeight() / 4 + this.wallThickness;
 };
 
 HexMazeCanvasView.prototype.canvasWidth = function () {
-  return 2 * (this.cols - 1) * (this.sideLength * 8 / 5) + 19 * this.sideLength / 5;
+  return 2 * (this.cols - 1) * (this.sideLength * 8 / 5) + 19 *
+    this.sideLength / 5 + this.wallThickness;
 };
 
-HexMazeCanvasView.prototype.refreshInterior = function (maze) {
+HexMazeCanvasView.prototype.refresh = function (maze) {
   var row, col;
+
+  this.clear();
 
   for (row = 0; row < this.rows; row++) {
     for (col = 0; col < this.cols; col++) {
       this.refreshHex(maze, row, col);
     }
   }
+
+  this.refreshCur(maze.cur[0], maze.cur[1]);
 };
 
 HexMazeCanvasView.prototype.refreshCur = function (row, col) {
@@ -29,55 +34,54 @@ HexMazeCanvasView.prototype.refreshCur = function (row, col) {
   this.ctx.fill();
 };
 
-HexMazeCanvasView.prototype.refreshBorder = function () {
-};
-
 HexMazeCanvasView.prototype.hexHeight = function () {
   return 16 * this.sideLength / 5;
 };
 
 HexMazeCanvasView.prototype.centerX = function (row, col) {
   var offset = row % 2 === 0 ? this.hexHeight() / 2 : this.hexHeight();
-  return col * this.hexHeight() + offset - this.sideLength / 2;
+  return col * this.hexHeight() + offset - this.sideLength / 2 +
+    this.wallThickness / 2;
 };
 
 HexMazeCanvasView.prototype.centerY = function (row, col) {
-  return (row + 1) * this.hexHeight() / 4;
+  return (row + 1) * this.hexHeight() / 4 + this.wallThickness / 2;
 };
 
 // The geometry here looks like this
-//   (center)   r   /r+a
-//                 /
-//                /
-//   ___________b/
+//         -b___________-b
+//          /|         |\
+//         / |         | \
+//        /  |         |  \
+// -(r+a)/ -r|         |r  \r+a
+//       \   |         |   /
+//        \  |         |  /
+//         \ |         | /
+//         b\|_________|/b
 HexMazeCanvasView.prototype.refreshHex = function (maze, row, col) {
   var x = this.centerX(row, col),
       y = this.centerY(row),
-      a = this.sideLength * 3 / 5;
-      b = this.sideLength * 4 / 5;
-      r = this.sideLength / 2;
+      a = this.sideLength * 3 / 5,
+      b = this.sideLength * 4 / 5,
+      r = this.sideLength / 2,
 
-  if (maze.drWall(row, col)) {
-    this.drawWall(x + (r + a), y, x + r, y + b);
-  }
+      lineOrMove = function (cond, x, y) {
+        cond.call(maze, row, col) ? this.lineTo(x, y) : this.moveTo(x, y);
+      }.bind(this.ctx);
 
-  if (maze.dWall(row, col)) {
-    this.drawWall(x + r, y + b, x - r, y + b);
-  }
+  this.ctx.save();
+  this.ctx.translate(x, y);
+  this.ctx.beginPath()
+  this.ctx.moveTo(r + a, 0);
 
-  if (maze.dlWall(row, col)) {
-    this.drawWall(x - r, y + b, x - (r + a), y);
-  }
+  lineOrMove(maze.drWall,        r,  b);
+  lineOrMove(maze.dWall ,       -r,  b);
+  lineOrMove(maze.dlWall, -(r + a),  0);
+  lineOrMove(maze.ulWall,       -r, -b);
+  lineOrMove(maze.uWall ,        r, -b);
+  lineOrMove(maze.urWall,    r + a,  0);
 
-  if (maze.urWall(row, col)) {
-    this.drawWall(x + (r + a), y, x + r, y - b);
-  }
+  this.ctx.stroke();
 
-  if (maze.uWall(row, col)) {
-    this.drawWall(x + r, y - b, x - r, y - b);
-  }
-
-  if (maze.ulWall(row, col)) {
-    this.drawWall(x - r, y - b, x - (r + a), y);
-  }
+  this.ctx.restore();
 };

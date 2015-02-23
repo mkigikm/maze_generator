@@ -38,7 +38,6 @@ MazeController.prototype.setup = function () {
   }
 
   this.view.refresh(this.maze);
-  this.view.refreshCur(row, col);
 }
 
 MazeController.prototype.tick = function () {

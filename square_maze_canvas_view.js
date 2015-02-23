@@ -5,19 +5,19 @@ function SquareMazeCanvasView (rows, cols, sideLength, wallThickness, canvas) {
 SquareMazeCanvasView.prototype = Object.create(MazeCanvasView.prototype);
 
 SquareMazeCanvasView.prototype.canvasHeight = function () {
-  return this.rows * this.sideLength;
+  return this.rows * this.sideLength + this.wallThickness;
 };
 
 SquareMazeCanvasView.prototype.canvasWidth = function () {
-  return this.cols * this.sideLength;
+  return this.cols * this.sideLength + this.wallThickness;
 };
 
-SquareMazeCanvasView.prototype.mazeRowToY = function (row) {
-  return row * this.sideLength;
+SquareMazeCanvasView.prototype.cornerY = function (row) {
+  return row * this.sideLength + this.wallThickness / 2;
 };
 
-SquareMazeCanvasView.prototype.mazeColToX = function (col) {
-  return col * this.sideLength;
+SquareMazeCanvasView.prototype.cornerX = function (col) {
+  return col * this.sideLength + this.wallThickness / 2;
 };
 
 SquareMazeCanvasView.prototype.refreshInterior = function (maze) {
@@ -26,20 +26,15 @@ SquareMazeCanvasView.prototype.refreshInterior = function (maze) {
 };
 
 SquareMazeCanvasView.prototype.refreshBorder = function () {
-  this.drawWall(0, this.canvasHeight()-1, this.canvasWidth()-1,
-    this.canvasHeight()-1, 'black');
-
-  this.drawWall(this.canvasWidth() - 1, 0, this.canvasWidth() - 1,
-    this.canvasHeight() -1 , 'black');
-
-  this.drawWall(0, 0, this.canvasWidth()-1, 0, 'black');
-
-  this.drawWall(0, 0, 0, this.canvasHeight() -1 , 'black');
+  this.drawRow(0, 0, this.cols);
+  this.drawRow(this.rows, 0, this.cols);
+  this.drawCol(0, 0, this.rows);
+  this.drawCol(this.cols, 0, this.rows);
 };
 
 SquareMazeCanvasView.prototype.refreshCur = function (row, col) {
-  var y = this.mazeRowToY(row) + this.sideLength / 2,
-      x = this.mazeColToX(col) + this.sideLength / 2;
+  var y = this.cornerY(row) + this.sideLength / 2,
+      x = this.cornerX(col) + this.sideLength / 2;
 
   this.ctx.beginPath();
   this.ctx.arc(x, y, this.sideLength / 3, 0, 2 * Math.PI, false);
@@ -92,17 +87,35 @@ SquareMazeCanvasView.prototype.drawCols = function (maze) {
 };
 
 SquareMazeCanvasView.prototype.drawRow = function (row, startCol, endCol) {
-  var y  = this.mazeRowToY(row),
-      x0 = this.mazeColToX(startCol),
-      x1 = this.mazeColToX(endCol);
+  var y  = this.cornerY(row),
+      x0 = this.cornerX(startCol),
+      x1 = this.cornerX(endCol);
 
   this.drawWall(x0, y, x1, y, 'black');
 };
 
 SquareMazeCanvasView.prototype.drawCol = function (col, startRow, endRow) {
-  var x  = this.mazeColToX(col),
-      y0 = this.mazeRowToY(startRow),
-      y1 = this.mazeRowToY(endRow);
+  var x  = this.cornerX(col),
+      y0 = this.cornerY(startRow),
+      y1 = this.cornerY(endRow);
 
   this.drawWall(x, y0, x, y1, 'black');
+};
+
+SquareMazeCanvasView.prototype.refresh = function (maze) {
+  this.clear();
+  this.refreshInterior(maze);
+  this.refreshBorder();
+  this.refreshCur(maze.cur[0], maze.cur[1]);
+};
+
+
+
+SquareMazeCanvasView.prototype.drawWall = function (x0, y0, x1, y1) {
+  this.ctx.beginPath();
+
+  this.ctx.moveTo(x0, y0);
+  this.ctx.lineTo(x1, y1);
+
+  this.ctx.stroke();
 };
