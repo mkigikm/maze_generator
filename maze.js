@@ -8,6 +8,7 @@ function Maze (rows, cols, start) {
   this.rows     = rows;
   this.cols     = cols;
   this.deadEnds = null;
+  this.filled   = null;
 
   this.setupBits();
   for (row = 0; row < rows; row++) {
@@ -110,6 +111,7 @@ Maze.prototype.tryDirection = function (dir) {
 Maze.prototype.fillInit = function () {
   var row, col;
 
+  this.filled = [];
   this.deadEnds = [];
   for (row = 0; row < this.rows; row++) {
     for (col = 0; col < this.cols; col++) {
@@ -138,6 +140,7 @@ Maze.prototype.fill = function () {
   this.deadEnds = shuffle(this.deadEnds);
   if (cur = this.deadEnds.pop()) {
     this.fillDeadEnd(cur[0], cur[1]);
+    this.filled.push(cur);
   }
 
   return cur;
@@ -155,4 +158,78 @@ Maze.prototype.fillDeadEnd = function (row, col) {
       this.deadEnds.push([nrow, ncol]);
     }
   }, this);
+};
+
+Maze.prototype.placeRoom = function () {
+  this.filled = shuffle(this.filled);
+  var start = this.filled.pop(),
+      srow = start[0],
+      scol = start[1],
+      lmax, rmax, umax, dmax, curDir = 0,
+      u, r, d, l,
+      row, col;
+
+  console.log("starting at", srow, scol)
+  umax = dmax = srow;
+  lmax = rmax = scol;
+  u = umax > 0;
+  d = dmax < this.rows - 1;
+  l = lmax > 0;
+  r = rmax < this.cols - 1;
+
+  while (u || r || d || l) {
+    switch (curDir) {
+      case 0:
+        if (u) {
+          for (col = lmax; col <= rmax; col++) {
+            u = u && !this.visited(umax - 1, col);
+          }
+          if (u) umax--;
+          u = u && umax;
+        }
+        break;
+      case 1:
+        if (d) {
+          for (col = lmax; col <= rmax; col++) {
+            d = d && !this.visited(dmax + 1, col);
+          }
+          if (d) dmax++;
+          d = d && dmax < this.rows - 1;
+        }
+        break;
+      case 2:
+        if (l) {
+          for (row = umax; row <= dmax; row++) {
+            l = l && !this.visited(row, lmax - 1);
+          }
+          if (l) lmax--;
+          l = l && lmax;
+        }
+        break;
+      case 3:
+        if (r) {
+          for (row = umax; row <= dmax; row++) {
+            r = r && !this.visited(row, rmax + 1);
+          }
+          if (r) rmax++;
+          r = r && rmax < this.cols - 1;
+        }
+        break;
+    }
+    curDir = (curDir + 1) % 4;
+    if (dmax - umax > 5 || rmax - lmax > 5) {
+      return null;
+    }
+  }
+
+  if (dmax - umax < 2 || rmax - lmax < 2) {
+    return null;
+  }
+
+  for (row = umax; row <= dmax; row++) {
+    for (col = lmax; col < rmax; col++) {
+      this.smashWalls(row, col);
+    }
+  }
+  return [umax, lmax, dmax, rmax];
 };

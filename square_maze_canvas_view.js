@@ -125,3 +125,11 @@ SquareMazeCanvasView.prototype.fill = function (row, col) {
   this.ctx.fillRect(0, 0, this.sideLength, this.sideLength);
   this.ctx.restore();
 };
+
+SquareMazeCanvasView.prototype.placeRoom = function (srow, scol, erow, ecol) {
+  var x = this.cornerX(scol),
+      y = this.cornerY(srow);
+
+  this.ctx.fillStyle = 'red';
+  this.ctx.fillRect(x, y, this.cornerX(ecol - scol + 1), this.cornerY(erow - srow + 1));
+};

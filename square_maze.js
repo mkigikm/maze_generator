@@ -58,6 +58,10 @@ SquareMaze.prototype.walls = function (row, col) {
 };
 
 SquareMaze.prototype.crushWall = function (row, col, dir) {
+  if (this.outOfBounds(row,col)) {
+    return;
+  }
+
   switch (dir) {
     case SquareMaze.DOWN:
     case SquareMaze.RIGHT:
@@ -90,4 +94,10 @@ SquareMaze.prototype.buildWall = function (row, col, dir) {
       this.buildWall(row, col - 1, SquareMaze.RIGHT);
       break;
   }
+};
+
+SquareMaze.prototype.smashWalls = function (row, col) {
+  this.dirs().forEach(function (dir) {
+    this.crushWall(row, col, dir);
+  }, this);
 };
