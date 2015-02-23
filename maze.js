@@ -67,9 +67,16 @@ Maze.prototype.visit = function () {
   return null;
 };
 
+Maze.prototype.generate = function () {
+  while (!this.finishedBuilding()) {
+    this.visit();
+  }
+};
+
 Maze.prototype.finishedBuilding = function () {
   return this.cur[0] === this.start[0] &&
-         this.cur[1] === this.start[1];
+         this.cur[1] === this.start[1] &&
+         this.visited(this.cur[0], this.cur[1]);
 };
 
 Maze.prototype.tryToCrush = function () {

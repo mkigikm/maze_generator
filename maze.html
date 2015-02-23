@@ -28,7 +28,7 @@
         <li>
           <label>
             Columns
-            <input type="number" id="cols" value="50" min="1" max="1000">
+            <input type="number" id="cols" value="40" min="1" max="1000">
           </label>
         </li>
         <li>
@@ -66,20 +66,20 @@
           </label>
         </li>
         <li>
-          <button onclick="c.setup()">Refresh</button>
+          <button id="refresh">Refresh</button>
         </li>
       </ul>
 
       <h2>Controls</h2>
       <ul>
         <li>
-          <button onclick="c.step()">Step</button>
+          <button id="step">Step</button>
         </li>
         <li>
-          <button onclick="c.go()">Go</button>
+          <button id="go">Go</button>
         </li>
         <li>
-          <button onclick="c.stop()">Stop</button>
+          <button id="generate">Generate</button>
         </li>
         <li>
           <label>Wait Time (ms)
