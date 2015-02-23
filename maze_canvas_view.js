@@ -16,3 +16,10 @@ function MazeCanvasView (rows, cols, sideLength, wallThickness, canvas) {
 MazeCanvasView.prototype.clear = function () {
   this.ctx.clearRect(0, 0, this.canvasWidth(), this.canvasHeight());
 };
+
+MazeCanvasView.prototype.drawCur = function (x, y, radius) {
+  this.ctx.beginPath();
+  this.ctx.arc(x, y, radius, 0, 2 * Math.PI);
+  this.ctx.fillStyle = 'red';
+  this.ctx.fill();
+};

@@ -23,15 +23,11 @@ HexMazeCanvasView.prototype.refresh = function (maze) {
       this.refreshHex(maze, row, col);
     }
   }
-
   this.refreshCur(maze.cur[0], maze.cur[1]);
 };
 
 HexMazeCanvasView.prototype.refreshCur = function (row, col) {
-  this.ctx.beginPath();
-  this.ctx.arc(this.centerX(row, col), this.centerY(row, col), 5, 0, 2 * Math.PI, false);
-  this.ctx.fillStyle = 'red';
-  this.ctx.fill();
+  this.drawCur(this.centerX(row, col), this.centerY(row), this.hexHeight() / 8);
 };
 
 HexMazeCanvasView.prototype.hexHeight = function () {
