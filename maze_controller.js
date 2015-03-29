@@ -30,6 +30,7 @@ MazeController.prototype.setup = function () {
     this.view = new SquareMazeCanvasView(rows, cols, sideLength, wallThickness,
       canvas);
   } else {
+    cols = cols / 2 | 0;
     this.maze = new HexMaze(rows, cols, [row, col]);
     this.view = new HexMazeCanvasView(rows, cols, sideLength, wallThickness,
       canvas);
