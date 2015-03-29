@@ -3,6 +3,7 @@
   <head>
     <title>Amazing generator</title>
     <link rel="stylesheet" href="maze.css">
+    <link href='http://fonts.googleapis.com/css?family=Noto+Serif:400,700' rel='stylesheet' type='text/css'>
     <script type="text/javascript" src="maze.js"></script>
     <script type="text/javascript" src="square_maze.js"></script>
     <script type="text/javascript" src="hex_maze.js"></script>
@@ -16,94 +17,41 @@
 
   <body onload="setup()">
     <h1>The Amazing Generator</h1>
-    <main>
-      <div class="controls">
-      <h2>Settings</h2>
-      <ul>
-        <li>
-          <label>
-            Rows
-            <input type="number" id="rows" value="40" min="1" max="1000">
-          </label>
-        </li>
-        <li>
-          <label>
-            Columns
-            <input type="number" id="cols" value="40" min="1" max="1000">
-          </label>
-        </li>
-        <li>
-          <label>
-            Side Length
-            <input type="number" id="side_length" value="15" min="1" max="50">
-          </label>
-        </li>
-        <li>
-          <label>
-            Wall Thickness
-            <input type="number" id="wall_thickness" value="3" min="1" max="20">
-          </label>
-        </li>
-        <li>
-          <label>
-            Start Row
-            <input type="number" id="start_row" value="0" min="0" max="999">
-          </label>
-        </li>
-        <li>
-          <label>
-            Start Column
-            <input type="number" id="start_col" value="0" min="0" max="999">
-          </label>
-        </li>
-        <li>
-          <label>
-            Square Maze
-            <input type="radio" id="square_maze" name="maze_type" value="true" checked="checked">
-          </label>
-          <label>
-            Hex Maze
-            <input type="radio" id="hex_maze" name="maze_type" value="false">
-          </label>
-        </li>
-        <li>
+
+    <nav class="clearfix">
+      <section class="settings">
+        <h2>SETTINGS</h2>
+        <label>
+          Rows
+          <input type="number" id="rows" value="40" min="1" max="1000">
+        </label>
+        <label>
+          Columns
+          <input type="number" id="cols" value="40" min="1" max="1000">
+        </label>
+
+        <label>
+          Square Maze
+          <input type="radio" id="square_maze" name="maze_type" value="true"
+            checked="checked">
+        </label>
+        <label>
+          Hex Maze
+          <input type="radio" id="hex_maze" name="maze_type" value="false">
+        </label>
+        <div>
           <button id="refresh">Refresh</button>
-        </li>
-      </ul>
+        </div>
+      </section>
 
-      <h2>Controls</h2>
-      <ul>
-        <li>
-          <button id="step">Step</button>
-        </li>
-        <li>
-          <button id="go">Go</button>
-        </li>
-        <li>
-          <button id="generate">Generate</button>
-        </li>
-        <li>
-          <label>Wait Time (ms)
-            <input type="number" id="delay" value="10" min="1" max="5000">
-          </label>
-        </li>
-        <li>
-          <button id="fill">Fill</button>
-        </li>
-        <li>
-          <label>Fill proportion
-            <input type="number" id="fillProportion" value="0.5" step="0.01" min="0" max="1">
-          </label>
-        </li>
-        <li>
-          <button id="placeRoom">Place Room</button>
-        </li>
-      </ul>
-      </div>
+      <section class="controls">
+        <h2>CONTROLS</h2>
+        <button id="step">Step</button>
+        <button id="go">Go</button>
+        <button id="generate">Generate</button>
+      </section>
+    </nav>
 
-      <div class="maze">
-        <canvas id="maze_display"></canvas>
-      </div>
-    </main>
+    <canvas id="maze_display"></canvas>
   </body>
 </html>

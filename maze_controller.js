@@ -10,10 +10,10 @@ function MazeController () {
 MazeController.prototype.setup = function () {
   var rows           = parseInt($('#rows').val()) || 40,
       cols           = parseInt($('#cols').val()) || 40,
-      row            = parseInt($('#start_row').val()) || 0,
-      col            = parseInt($('#start_col').val()) || 0,
-      sideLength     = parseInt($('#side_length').val()) || 15,
-      wallThickness  = parseInt($('#wall_thickness').val()) || 3,
+      row            = 0,
+      col            = 0,
+      sideLength     = 15,
+      wallThickness  = 3,
       canvas         = $('#maze_display').get(0);
 
   this.stop();
